@@ -5,7 +5,13 @@
     "noUncheckedIndexedAccess": true,
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["jest", "node"]
   },
-  "include": ["**/*.ts", "**/*.tsx", "expo-env.d.ts", ".expo/types/**/*.ts"]
+  "include": ["**/*.ts", "**/*.tsx", "expo-env.d.ts", ".expo/types/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "jest.setup.ts",
+    "jest.setup-globals.ts"
+  ]
 }
