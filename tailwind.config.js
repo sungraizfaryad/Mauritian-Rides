@@ -21,6 +21,7 @@ module.exports = {
         mur: '#1a6b3f',
       },
       fontFamily: {
+        // Placeholder — replace with real expo-font family names when brand fonts land.
         sans: ['System'],
       },
     },
