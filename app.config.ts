@@ -51,8 +51,22 @@ const config: ExpoConfig & { newArchEnabled?: boolean } = {
   web: { bundler: 'metro' },
   plugins: [
     'expo-router',
-    // expo-secure-store, expo-location, expo-notifications, expo-image-picker
-    // are installed in Tasks 3/13 — re-add entries then.
+    'expo-secure-store',
+    [
+      'expo-location',
+      {
+        locationAlwaysAndWhenInUsePermission:
+          'Share your live location with the rider during an active ride.',
+      },
+    ],
+    'expo-notifications',
+    [
+      'expo-image-picker',
+      {
+        photosPermission: 'Upload a photo of your driver documents.',
+        cameraPermission: 'Take a photo of your driver documents.',
+      },
+    ],
   ],
   experiments: { typedRoutes: true },
   extra: {
