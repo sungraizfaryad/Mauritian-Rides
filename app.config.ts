@@ -74,6 +74,8 @@ const config: ExpoConfig & { newArchEnabled?: boolean } = {
     apiBaseUrl: process.env.EXPO_PUBLIC_API_URL ?? 'https://mauritianrides.com/wp-json/mr/v1',
     sentryDsn: process.env.EXPO_PUBLIC_SENTRY_DSN ?? '',
     posthogKey: process.env.EXPO_PUBLIC_POSTHOG_KEY ?? '',
+    // Run `eas init` once logged in to replace this with the real project ID.
+    eas: { projectId: 'pending-eas-init' },
   },
 };
 
