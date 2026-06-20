@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { useAuthStore } from '@/lib/auth/store';
 import { QueryProvider } from '@/lib/query/provider';
 import { initI18n } from '@/lib/i18n';
+import { initSentry } from '@/lib/observability/sentry';
+import { initPostHog } from '@/lib/observability/posthog';
 import '../global.css';
 
 export default function RootLayout() {
@@ -10,6 +12,11 @@ export default function RootLayout() {
   const segments = useSegments();
   const firstSegment = segments[0];
   const [i18nReady, setI18nReady] = useState(false);
+
+  useEffect(() => {
+    initSentry();
+    initPostHog();
+  }, []);
 
   useEffect(() => {
     initI18n(session?.locale ?? 'en').then(() => setI18nReady(true));
