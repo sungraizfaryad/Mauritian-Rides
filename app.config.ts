@@ -25,7 +25,8 @@ const config: ExpoConfig & { newArchEnabled?: boolean } = {
   android: {
     package: 'com.mauritianrides.app',
     adaptiveIcon: {
-      foregroundImage: './assets/images/adaptive-icon.png',
+      // Template ships android-icon-foreground.png; brand-specific asset lands later.
+      foregroundImage: './assets/images/android-icon-foreground.png',
       backgroundColor: '#1a1a1a',
     },
     permissions: [
