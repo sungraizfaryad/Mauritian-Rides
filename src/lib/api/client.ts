@@ -1,0 +1,45 @@
+import axios, { type AxiosError, type AxiosInstance } from 'axios';
+import axiosRetry from 'axios-retry';
+import Constants from 'expo-constants';
+import { getAccessToken } from '@/lib/auth/tokens';
+
+const baseURL =
+  (Constants.expoConfig?.extra?.apiBaseUrl as string | undefined) ??
+  'https://mauritianrides.com/wp-json/mr/v1';
+
+export interface ApiError {
+  status: number;
+  code: string;
+  message: string;
+}
+
+export const api: AxiosInstance = axios.create({
+  baseURL,
+  timeout: 12_000,
+  headers: { 'Content-Type': 'application/json' },
+});
+
+api.interceptors.request.use((config) => {
+  const token = getAccessToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+api.interceptors.response.use(
+  (r) => r,
+  (err: AxiosError<{ code?: string; message?: string }>) => {
+    const status = err.response?.status ?? 0;
+    const code = err.response?.data?.code ?? (err.code ?? 'network_error');
+    const message = err.response?.data?.message ?? err.message;
+    const apiError: ApiError = { status, code, message };
+    return Promise.reject(apiError);
+  },
+);
+
+axiosRetry(api, {
+  retries: 3,
+  retryDelay: axiosRetry.exponentialDelay,
+  retryCondition: (e) => e.response?.status === 429,
+});
