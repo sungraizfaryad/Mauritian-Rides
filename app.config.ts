@@ -1,0 +1,64 @@
+import type { ExpoConfig } from 'expo/config';
+
+// ExpoConfig types don't yet expose newArchEnabled — keep it via intersection.
+const config: ExpoConfig & { newArchEnabled?: boolean } = {
+  name: 'Mauritian Rides',
+  slug: 'mauritianrides-app',
+  version: '0.1.0',
+  orientation: 'portrait',
+  icon: './assets/images/icon.png',
+  scheme: 'mr',
+  userInterfaceStyle: 'automatic',
+  newArchEnabled: true,
+  ios: {
+    bundleIdentifier: 'com.mauritianrides.app',
+    supportsTablet: true,
+    associatedDomains: ['applinks:mauritianrides.com'],
+    infoPlist: {
+      NSLocationWhenInUseUsageDescription:
+        'See your pickup point and find available rides.',
+      NSLocationAlwaysAndWhenInUseUsageDescription:
+        'Share your live location with the rider during an active ride.',
+      UIBackgroundModes: ['location', 'fetch', 'remote-notification'],
+    },
+  },
+  android: {
+    package: 'com.mauritianrides.app',
+    adaptiveIcon: {
+      foregroundImage: './assets/images/adaptive-icon.png',
+      backgroundColor: '#1a1a1a',
+    },
+    permissions: [
+      'ACCESS_FINE_LOCATION',
+      'ACCESS_COARSE_LOCATION',
+      'ACCESS_BACKGROUND_LOCATION',
+      'FOREGROUND_SERVICE',
+      'FOREGROUND_SERVICE_LOCATION',
+      'POST_NOTIFICATIONS',
+      'CAMERA',
+      'READ_MEDIA_IMAGES',
+    ],
+    intentFilters: [
+      {
+        action: 'VIEW',
+        autoVerify: true,
+        data: [{ scheme: 'https', host: 'mauritianrides.com' }],
+        category: ['BROWSABLE', 'DEFAULT'],
+      },
+    ],
+  },
+  web: { bundler: 'metro' },
+  plugins: [
+    'expo-router',
+    // expo-secure-store, expo-location, expo-notifications, expo-image-picker
+    // are installed in Tasks 3/13 — re-add entries then.
+  ],
+  experiments: { typedRoutes: true },
+  extra: {
+    apiBaseUrl: process.env.EXPO_PUBLIC_API_URL ?? 'https://mauritianrides.com/wp-json/mr/v1',
+    sentryDsn: process.env.EXPO_PUBLIC_SENTRY_DSN ?? '',
+    posthogKey: process.env.EXPO_PUBLIC_POSTHOG_KEY ?? '',
+  },
+};
+
+export default config;
