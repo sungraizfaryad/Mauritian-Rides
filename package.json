@@ -31,6 +31,7 @@
     "expo-system-ui": "~56.0.5",
     "expo-web-browser": "~56.0.5",
     "i18next": "^25.10.10",
+    "nativewind": "^4.2.5",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.80.0",
@@ -57,6 +58,7 @@
     "jest": "^30.4.2",
     "jest-expo": "~56.0.5",
     "msw": "^2.14.6",
+    "tailwindcss": "^3.4.19",
     "typescript": "~6.0.3"
   },
   "scripts": {
