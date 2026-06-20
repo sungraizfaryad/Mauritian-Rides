@@ -1,0 +1,17 @@
+{
+  "common": {
+    "app_name": "Mauritian Rides",
+    "loading": "Chargement…",
+    "retry": "Réessayer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer"
+  },
+  "public": {
+    "hero_title": "Réservez une course partout à Maurice",
+    "hero_cta": "Réserver une course"
+  },
+  "auth": {
+    "login_title": "Connexion",
+    "register_title": "Créer un compte"
+  }
+}

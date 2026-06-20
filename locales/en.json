@@ -1,0 +1,17 @@
+{
+  "common": {
+    "app_name": "Mauritian Rides",
+    "loading": "Loading…",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "public": {
+    "hero_title": "Get a ride anywhere in Mauritius",
+    "hero_cta": "Book a ride"
+  },
+  "auth": {
+    "login_title": "Sign in",
+    "register_title": "Create account"
+  }
+}
