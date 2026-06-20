@@ -9,6 +9,10 @@ module.exports = {
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    // expo/src/winter installs lazy globals via Object.defineProperty getters.
+    // jest-runtime@30 throws if a lazy getter fires during 'betweenTests' state.
+    // Stub out the winter module to avoid the incompatibility.
+    '^expo/src/winter$': '<rootDir>/src/__mocks__/expoWinter.ts',
   },
   testPathIgnorePatterns: ['/node_modules/', '/ios/', '/android/', '/dist/'],
   collectCoverageFrom: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}', '!**/*.d.ts'],

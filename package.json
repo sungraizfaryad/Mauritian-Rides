@@ -71,5 +71,9 @@
     "test:watch": "jest --watch",
     "typecheck": "tsc --noEmit"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "jest-environment-node": "^30.0.0",
+    "jest-mock": "^30.0.0"
+  }
 }
