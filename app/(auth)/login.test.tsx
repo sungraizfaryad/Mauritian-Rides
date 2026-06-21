@@ -7,6 +7,7 @@ const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
   router: { replace: (path: unknown) => mockPush(path) },
   Link: ({ children }: { children: React.ReactNode }) => children,
+  useLocalSearchParams: () => ({}),
 }));
 
 jest.mock('react-native-safe-area-context', () => ({

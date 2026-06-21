@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { router, Link } from 'expo-router';
+import { router, Link, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Screen } from '@/components/ui/Screen';
 import { Button } from '@/components/ui/Button';
@@ -15,6 +15,7 @@ import type { ApiError } from '@/lib/api/client';
 export default function Register() {
   const { t } = useTranslation();
   const reg = useRegister();
+  const { next } = useLocalSearchParams<{ next?: string }>();
   const [serverError, setServerError] = useState<string | null>(null);
 
   const { control, handleSubmit, watch, setValue, formState } = useForm<RegisterInput>({
@@ -32,7 +33,7 @@ export default function Register() {
     setServerError(null);
     try {
       const session = await reg.mutateAsync(values);
-      router.replace(session.persona === 'driver' ? '/(driver)/feed' : '/(rider)');
+      router.replace(session.persona === 'driver' ? '/(driver)/feed' : ((next as never) ?? '/(rider)'));
     } catch (e) {
       setServerError((e as ApiError).message);
     }

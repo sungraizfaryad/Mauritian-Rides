@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Text } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { router, Link } from 'expo-router';
+import { router, Link, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Screen } from '@/components/ui/Screen';
 import { Button } from '@/components/ui/Button';
@@ -14,6 +14,7 @@ import type { ApiError } from '@/lib/api/client';
 export default function Login() {
   const { t } = useTranslation();
   const login = useLogin();
+  const { next } = useLocalSearchParams<{ next?: string }>();
   const [serverError, setServerError] = useState<string | null>(null);
 
   const { control, handleSubmit, formState } = useForm<LoginInput>({
@@ -26,7 +27,7 @@ export default function Login() {
     setServerError(null);
     try {
       const session = await login.mutateAsync(values);
-      router.replace(session.persona === 'driver' ? '/(driver)/feed' : '/(rider)');
+      router.replace(session.persona === 'driver' ? '/(driver)/feed' : ((next as never) ?? '/(rider)'));
     } catch (e) {
       const err = e as ApiError;
       setServerError(err.status === 401 ? t('auth.invalid_credentials') : err.message);

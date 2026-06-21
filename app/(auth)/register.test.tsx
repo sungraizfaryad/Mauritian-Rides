@@ -7,6 +7,7 @@ const mockReplace = jest.fn();
 jest.mock('expo-router', () => ({
   router: { replace: (...a: unknown[]) => mockReplace(...a) },
   Link: ({ children }: { children: React.ReactNode }) => children,
+  useLocalSearchParams: () => ({}),
 }));
 jest.mock('react-native-safe-area-context', () => ({
   SafeAreaView: ({ children }: { children: React.ReactNode }) => children,
