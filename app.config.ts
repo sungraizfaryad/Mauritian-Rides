@@ -4,6 +4,7 @@ import type { ExpoConfig } from 'expo/config';
 const config: ExpoConfig & { newArchEnabled?: boolean } = {
   name: 'Mauritian Rides',
   slug: 'mauritianrides-app',
+  owner: 'mauritianrides',
   version: '0.1.0',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
@@ -82,8 +83,7 @@ const config: ExpoConfig & { newArchEnabled?: boolean } = {
     apiBaseUrl: process.env.EXPO_PUBLIC_API_URL ?? 'https://mauritianrides.com/wp-json/mr/v1',
     sentryDsn: process.env.EXPO_PUBLIC_SENTRY_DSN ?? '',
     posthogKey: process.env.EXPO_PUBLIC_POSTHOG_KEY ?? '',
-    // Run `eas init` once logged in to replace this with the real project ID.
-    eas: { projectId: 'pending-eas-init' },
+    eas: { projectId: 'bb64a20c-4fa8-457f-821a-518395c95348' },
   },
 };
 
