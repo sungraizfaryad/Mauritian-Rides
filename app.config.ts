@@ -77,6 +77,12 @@ const config: ExpoConfig & { newArchEnabled?: boolean } = {
         cameraPermission: 'Take a photo of your driver documents.',
       },
     ],
+    [
+      'expo-local-authentication',
+      {
+        faceIDPermission: 'Use Face ID to unlock your driver account.',
+      },
+    ],
   ],
   experiments: { typedRoutes: true },
   extra: {
