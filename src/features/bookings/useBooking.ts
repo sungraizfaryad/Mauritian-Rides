@@ -6,7 +6,10 @@ export interface Booking {
   ref: string;
   status: 'open' | 'accepted' | 'completed' | 'cancelled' | 'expired';
   pickup: string;
+  pickup_lat: number;
+  pickup_lng: number;
   dropoff: string;
+  passengers: number;
   accepted_by: number | null;
   fare: string;
   created_at: string;
