@@ -16,6 +16,7 @@ TaskManager.defineTask(
   RIDE_SHARE_TASK,
   async ({ data, error }: TaskManager.TaskManagerTaskBody<{ locations: Location.LocationObject[] }>) => {
     if (error || !data?.locations?.length) return;
+    if (!activeRideId) return;
 
     const loc = data.locations[0];
     if (!loc) return;
@@ -93,7 +94,8 @@ export async function stopSharing(): Promise<void> {
   locationQueue.clear();
   useTrackingStore.getState().setActiveRideId(null);
   useTrackingStore.getState().setDriverPosition(null);
-  await Location.stopLocationUpdatesAsync(RIDE_SHARE_TASK);
+  const running = await Location.hasStartedLocationUpdatesAsync(RIDE_SHARE_TASK);
+  if (running) await Location.stopLocationUpdatesAsync(RIDE_SHARE_TASK);
 }
 
 export async function isSharing(): Promise<boolean> {

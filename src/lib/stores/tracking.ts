@@ -14,7 +14,7 @@ interface TrackingState {
   reset: () => void;
 }
 
-export const useTrackingStore = create<TrackingState>((set) => ({
+export const useRiderTrackingStore = create<TrackingState>((set) => ({
   activeRef: null,
   driverPosition: null,
   setActiveRef: (activeRef) => set({ activeRef }),
