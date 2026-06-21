@@ -1,4 +1,5 @@
-require('@shopify/flash-list/jestSetup');
+// @shopify/flash-list/jestSetup is intentionally NOT required here — it calls jest.mock
+// with RecyclerView (which is undefined in this package version), overriding our FlatList alias.
 // Polyfills MSW needs in the Node test environment.
 import { TextEncoder, TextDecoder } from 'util';
 // @ts-expect-error globalThis typing

@@ -10,6 +10,7 @@ let mockDriverDrift = 0;
 export const mockAcceptScenario: { mode: '200' | '402' | '409' } = { mode: '200' };
 export const mockCapState: { reached: boolean } = { reached: false };
 export const mockDocUploadFail: { fail: boolean } = { fail: false };
+export const mockFeedState: { empty: boolean } = { empty: false };
 
 export const handlers = [
   http.post(`${BASE}/auth/token`, async ({ request }) => {
@@ -141,8 +142,9 @@ export const handlers = [
 
   http.post(`${BASE}/auth/revoke`, () => new HttpResponse(null, { status: 204 })),
 
-  http.get(`${BASE}/rides/feed`, () =>
-    HttpResponse.json([
+  http.get(`${BASE}/rides/feed`, () => {
+    if (mockFeedState.empty) return HttpResponse.json([]);
+    return HttpResponse.json([
       {
         id: 101,
         ref: 'MR-20260622-0101',
@@ -169,8 +171,8 @@ export const handlers = [
         distance_km: 4.7,
         created_at: '2026-06-22T08:15:00.000Z',
       },
-    ]),
-  ),
+    ]);
+  }),
 
   // Numeric booking lookup for the driver detail screen.
   // The existing GET /bookings/:ref handler uses a string ref; this one takes a numeric id.
