@@ -23,7 +23,7 @@ export default function RiderHome() {
     const parsed = createBookingSchema.safeParse({ pickup, dropoff, passengers });
     if (!parsed.success) {
       const issue = parsed.error.issues[0];
-      setError(issue.path[0] === 'pickup' ? t('booking.pickup_required') : t('booking.dropoff_required'));
+      setError(issue?.path[0] === 'pickup' ? t('booking.pickup_required') : t('booking.dropoff_required'));
       return;
     }
     try {
