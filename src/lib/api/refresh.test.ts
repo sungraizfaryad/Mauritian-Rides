@@ -3,6 +3,7 @@ import { server } from '@/mocks/server';
 import { mockState } from '@/mocks/handlers';
 import { api } from './client';
 import * as tokens from '@/lib/auth/tokens';
+import { useAuthStore } from '@/lib/auth/store';
 
 // Spy on the SecureStore-backed fns so the interceptor gets a refresh token.
 // We can't mock the whole module because setAccessToken/getAccessToken use
@@ -23,6 +24,7 @@ afterAll(() => {
 beforeEach(() => {
   tokens.clearAccessToken();
   mockState.accessTokenValid = true;
+  useAuthStore.getState().clearSession();
 });
 
 describe('refresh interceptor', () => {
@@ -46,5 +48,18 @@ describe('refresh interceptor', () => {
     );
 
     await expect(api.get('/me')).rejects.toMatchObject({ status: 401 });
+  });
+
+  it('clears the session when refresh fails', async () => {
+    useAuthStore.getState().setSession({ userId: 1, persona: 'rider', displayName: 'X', locale: 'en' });
+    tokens.setAccessToken('stale');
+    mockState.accessTokenValid = false;
+    server.use(
+      http.post('https://mauritianrides.com/wp-json/mr/v1/auth/refresh', () =>
+        HttpResponse.json({ code: 'invalid_refresh' }, { status: 401 }),
+      ),
+    );
+    await expect(api.get('/me')).rejects.toBeDefined();
+    expect(useAuthStore.getState().session).toBeNull();
   });
 });

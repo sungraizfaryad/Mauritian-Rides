@@ -44,6 +44,7 @@ api.interceptors.response.use(
   },
 );
 
+// Registered after the response interceptors on purpose: 429 retries run before refresh in the error chain.
 axiosRetry(api, {
   retries: 3,
   retryDelay: axiosRetry.exponentialDelay,

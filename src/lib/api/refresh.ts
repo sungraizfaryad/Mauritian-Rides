@@ -8,6 +8,7 @@ import {
   clearAccessToken,
   clearRefreshToken,
 } from '@/lib/auth/tokens';
+import { useAuthStore } from '@/lib/auth/store';
 
 const refreshMutex = new Mutex();
 
@@ -35,6 +36,7 @@ export function installRefreshInterceptor(api: AxiosInstance, baseURL: string) {
         await refreshMutex.runExclusive(async () => {
           const refreshToken = await getRefreshToken();
           if (!refreshToken) throw new Error('no_refresh_token');
+          // Bare axios (not the api instance) so this refresh call doesn't re-enter the interceptors.
           const { data } = await axios.post<RefreshResponse>(`${baseURL}/auth/refresh`, {
             refresh_token: refreshToken,
           });
@@ -44,6 +46,7 @@ export function installRefreshInterceptor(api: AxiosInstance, baseURL: string) {
       } catch (refreshErr) {
         clearAccessToken();
         await clearRefreshToken();
+        useAuthStore.getState().clearSession();
         return Promise.reject(refreshErr);
       }
 

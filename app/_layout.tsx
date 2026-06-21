@@ -8,7 +8,7 @@ import { initSentry } from '@/lib/observability/sentry';
 import { initPostHog } from '@/lib/observability/posthog';
 import '../global.css';
 
-export default function RootLayout() {
+function RootLayoutInner() {
   const session = useAuthStore((s) => s.session);
   const segments = useSegments();
   const firstSegment = segments[0];
@@ -48,13 +48,19 @@ export default function RootLayout() {
   }
 
   return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(public)" />
+      <Stack.Screen name="(auth)" />
+      <Stack.Screen name="(rider)" />
+      <Stack.Screen name="(driver)" />
+    </Stack>
+  );
+}
+
+export default function RootLayout() {
+  return (
     <QueryProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(public)" />
-        <Stack.Screen name="(auth)" />
-        <Stack.Screen name="(rider)" />
-        <Stack.Screen name="(driver)" />
-      </Stack>
+      <RootLayoutInner />
     </QueryProvider>
   );
 }

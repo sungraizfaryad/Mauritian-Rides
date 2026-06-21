@@ -36,7 +36,7 @@ export function Button({
 
   function handlePress() {
     if (inactive) return;
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress();
   }
 
