@@ -19,6 +19,9 @@ module.exports = {
         },
         amber: { 500: '#f59e0b' },
         mur: '#1a6b3f',
+        danger: '#ef4444',
+        surface: '#ffffff',
+        surfaceDim: '#f5f5f5',
       },
       fontFamily: {
         // Placeholder — replace with real expo-font family names when brand fonts land.
