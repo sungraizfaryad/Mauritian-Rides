@@ -1,0 +1,17 @@
+Mauritian Rides connecte les passagers avec des chauffeurs locaux vérifiés à travers Maurice — sans prix variables, sans surprises.
+
+Pour les passagers :
+• Réservez une course en quelques secondes — choisissez votre départ sur la carte, tapez votre destination
+• Suivez la position de votre chauffeur en direct pendant le trajet
+• Payez le tarif fixe convenu, sans mauvaises surprises
+• Historique complet de vos courses
+
+Pour les chauffeurs :
+• Voir les courses disponibles à proximité, triées par distance
+• Accepter les courses selon votre disponibilité
+• Partager votre position en direct uniquement avec le passager assigné
+• Améliorez votre forfait mensuel pour accepter plus de courses — options Argent, Or ou Flotte
+
+Conçu pour Maurice. Disponible en anglais et en français.
+
+Les forfaits d'abonnement chauffeur donnent accès à la plateforme de transport réelle Mauritian Rides. Les paiements sont traités via MIPS (Mauritius Interbank Payment System).

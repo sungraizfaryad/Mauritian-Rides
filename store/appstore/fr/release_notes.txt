@@ -1,0 +1,5 @@
+Première version de Mauritian Rides.
+• Réservez des courses sur une carte avec suivi en direct
+• Fil de courses disponibles pour les chauffeurs
+• Gestion du forfait mensuel pour les chauffeurs
+• Support complet anglais et français

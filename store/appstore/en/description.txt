@@ -1,0 +1,17 @@
+Mauritian Rides connects passengers with vetted local drivers across Mauritius — no surge pricing, no guesswork.
+
+For riders:
+• Book a ride in seconds — choose your pickup on the map, type your destination
+• Watch your driver's location update live during the journey
+• Pay the agreed flat fare, no surprises
+• Full booking history at your fingertips
+
+For drivers:
+• See open rides near you, sorted by distance
+• Accept rides that fit your schedule
+• Share your live location securely with your assigned passenger only
+• Upgrade your monthly plan to accept more rides — Silver, Gold, or Fleet options available
+
+Built for Mauritius. Available in English and French.
+
+Driver subscription plans unlock the ability to accept rides through the Mauritian Rides platform — a real-world transport service. Payments are processed externally via MIPS (Mauritius Interbank Payment System).

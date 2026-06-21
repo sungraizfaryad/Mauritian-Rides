@@ -1,0 +1,5 @@
+First release of Mauritian Rides.
+• Book rides on a map with live driver tracking
+• Driver feed with open bookings
+• Monthly plan management for drivers
+• Full English and French support

@@ -1,0 +1,16 @@
+Mauritian Rides connects passengers with vetted local drivers across the island — no surge pricing, transparent fares.
+
+RIDERS
+• Book a ride in seconds from a map-based pickup screen
+• Watch your driver's live location during the journey
+• Flat agreed fares, full booking history
+
+DRIVERS
+• Browse open rides near you, sorted by distance
+• Accept bookings that suit your schedule
+• Live location sharing with your assigned passenger only
+• Monthly subscription plans: Free, Silver, Gold, Fleet
+
+Driver plans unlock access to a real-world transport platform. Payments are processed via MIPS (Mauritius Interbank Payment System) — not through Google Play billing.
+
+Available in English and French.

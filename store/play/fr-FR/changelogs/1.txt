@@ -1,0 +1,1 @@
+Première version : réservation sur carte, suivi en direct, fil chauffeur, gestion des forfaits, support complet EN/FR.

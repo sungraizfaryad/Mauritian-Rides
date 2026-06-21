@@ -1,0 +1,11 @@
+DRIVER SUBSCRIPTION — REAL-WORLD SERVICE (Guideline 3.1.3b)
+
+Driver subscription plans (Free/Silver/Gold/Fleet) grant drivers the right to accept a limited number of physical passenger rides per month on the Mauritian Rides platform. This is a real-world service as defined by App Store Guideline 3.1.3 — the purchase unlocks access to a physical transport service, not digital content or in-app credits. Payment is processed externally via MIPS (Mauritius Interbank Payment System) through a web redirect (ASWebAuthenticationSession) and is not subject to Apple's in-app purchase requirement. Reference: https://developer.apple.com/app-store/review/guidelines/#3.1.3b
+
+BACKGROUND LOCATION
+
+Background location is used exclusively during an active accepted ride to share the driver's position with the assigned rider. Location sharing stops automatically when the ride status changes to completed or cancelled. This is the same pattern used by Uber, Bolt, and similar transport apps.
+
+TEST ACCOUNTS
+
+Rider test account and driver test account credentials will be provided in the App Review Information section of App Store Connect.

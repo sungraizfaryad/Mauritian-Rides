@@ -1,0 +1,16 @@
+Mauritian Rides connecte les passagers avec des chauffeurs locaux vérifiés partout sur l'île — tarifs transparents, sans prix variables.
+
+PASSAGERS
+• Réservez une course en quelques secondes via une carte de sélection
+• Suivez la position de votre chauffeur en direct
+• Tarifs fixes, historique complet des courses
+
+CHAUFFEURS
+• Consultez les courses disponibles triées par distance
+• Acceptez les réservations selon vos disponibilités
+• Partage de position en direct uniquement avec le passager assigné
+• Forfaits mensuels : Gratuit, Argent, Or, Flotte
+
+Les forfaits chauffeur donnent accès à une plateforme de transport réelle. Les paiements sont traités via MIPS — hors facturation Google Play.
+
+Disponible en anglais et en français.
