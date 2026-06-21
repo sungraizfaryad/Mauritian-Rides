@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { TextField } from '@/components/ui/TextField';
 import { loginSchema, type LoginInput } from '@/schemas/auth';
 import { useLogin } from '@/lib/auth/useAuth';
+import { safeNextRoute } from '@/lib/navigation/safeNext';
 import type { ApiError } from '@/lib/api/client';
 
 export default function Login() {
@@ -27,7 +28,7 @@ export default function Login() {
     setServerError(null);
     try {
       const session = await login.mutateAsync(values);
-      router.replace(session.persona === 'driver' ? '/(driver)/feed' : ((next as never) ?? '/(rider)'));
+      router.replace(session.persona === 'driver' ? '/(driver)/feed' : (safeNextRoute(next) as never));
     } catch (e) {
       const err = e as ApiError;
       setServerError(err.status === 401 ? t('auth.invalid_credentials') : err.message);

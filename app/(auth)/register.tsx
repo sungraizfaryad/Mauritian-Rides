@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { TextField } from '@/components/ui/TextField';
 import { registerSchema, type RegisterInput } from '@/schemas/auth';
 import { useRegister } from '@/lib/auth/useAuth';
+import { safeNextRoute } from '@/lib/navigation/safeNext';
 import type { Persona } from '@/lib/auth/store';
 import type { ApiError } from '@/lib/api/client';
 
@@ -33,7 +34,7 @@ export default function Register() {
     setServerError(null);
     try {
       const session = await reg.mutateAsync(values);
-      router.replace(session.persona === 'driver' ? '/(driver)/feed' : ((next as never) ?? '/(rider)'));
+      router.replace(session.persona === 'driver' ? '/(driver)/feed' : (safeNextRoute(next) as never));
     } catch (e) {
       setServerError((e as ApiError).message);
     }
