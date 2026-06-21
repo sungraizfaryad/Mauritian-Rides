@@ -1,5 +1,6 @@
 import { Stack, Redirect, useSegments, router } from 'expo-router';
 import { useEffect, useState } from 'react';
+import { Linking } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/lib/auth/store';
@@ -9,6 +10,9 @@ import { initI18n } from '@/lib/i18n';
 import { initSentry } from '@/lib/observability/sentry';
 import { initPostHog } from '@/lib/observability/posthog';
 import { registerPushToken } from '@/lib/push/registerPushToken';
+import { ConsentSheet } from '@/components/analytics/ConsentSheet';
+import { consentStore } from '@/lib/observability/consentStore';
+import { track, setGuestPersona } from '@/lib/observability/analytics';
 import '@/lib/location/rideShare'; // registers DRIVER_LOCATION_TASK at module scope
 import '../global.css';
 
@@ -18,6 +22,7 @@ function RootLayoutInner() {
   const firstSegment = segments[0];
   const [i18nReady, setI18nReady] = useState(false);
   const [bootDone, setBootDone] = useState(false);
+  const [showConsent, setShowConsent] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -40,10 +45,35 @@ function RootLayoutInner() {
     if (session?.userId) void registerPushToken();
   }, [session?.userId]);
 
+  // Show the consent sheet once on first boot, after everything else is ready.
+  useEffect(() => {
+    if (bootDone && !consentStore.hasShown()) setShowConsent(true);
+  }, [bootDone]);
+
+  // Set guest persona when no session, so PostHog has a persona property even pre-login.
+  useEffect(() => {
+    if (!session) setGuestPersona();
+    // identifyUser is called from persist() in useAuth.ts on login/register.
+  }, [session]);
+
+  // Track deep-link opens: cold-start URL + subsequent scheme opens.
+  useEffect(() => {
+    void Linking.getInitialURL().then((url) => {
+      if (url) track('app_opened_from_deep_link', { url });
+    });
+    const sub = Linking.addEventListener('url', ({ url }) => {
+      if (url) track('app_opened_from_deep_link', { url });
+    });
+    return () => sub.remove();
+  }, []);
+
   useEffect(() => {
     const sub = Notifications.addNotificationResponseReceivedListener((response) => {
       const url = response.notification.request.content.data?.url;
-      if (typeof url === 'string') router.push(url as never);
+      if (typeof url === 'string') {
+        track('app_opened_from_deep_link', { url });
+        router.push(url as never);
+      }
     });
     return () => sub.remove();
   }, []);
@@ -77,13 +107,27 @@ function RootLayoutInner() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(public)" />
-      <Stack.Screen name="(auth)" />
-      <Stack.Screen name="(rider)" />
-      <Stack.Screen name="(driver)" />
-      <Stack.Screen name="payment-return" />
-    </Stack>
+    <>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(public)" />
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="(rider)" />
+        <Stack.Screen name="(driver)" />
+        <Stack.Screen name="payment-return" />
+      </Stack>
+      {showConsent && (
+        <ConsentSheet
+          onAccept={() => {
+            consentStore.markShown();
+            setShowConsent(false);
+          }}
+          onDecline={() => {
+            consentStore.markShown();
+            setShowConsent(false);
+          }}
+        />
+      )}
+    </>
   );
 }
 
