@@ -51,7 +51,15 @@ const config: ExpoConfig & { newArchEnabled?: boolean } = {
   web: { bundler: 'metro' },
   plugins: [
     'expo-router',
-    '@sentry/react-native',
+    [
+      '@sentry/react-native',
+      {
+        organization: 'mauritian-rides',
+        project: 'react-native',
+        // EU data region — sourcemap/debug-symbol uploads must target de.sentry.io.
+        url: 'https://de.sentry.io/',
+      },
+    ],
     'expo-secure-store',
     [
       'expo-location',

@@ -17,14 +17,16 @@
       "distribution": "internal",
       "channel": "preview",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://mauritianrides.com/wp-json/mr/v1"
+        "EXPO_PUBLIC_API_URL": "https://mauritianrides.com/wp-json/mr/v1",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://230d3ebcfe79fe353de333fecee1fa02@o4511604336164864.ingest.de.sentry.io/4511604351041616"
       }
     },
     "production": {
       "autoIncrement": true,
       "channel": "production",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://mauritianrides.com/wp-json/mr/v1"
+        "EXPO_PUBLIC_API_URL": "https://mauritianrides.com/wp-json/mr/v1",
+        "EXPO_PUBLIC_SENTRY_DSN": "https://230d3ebcfe79fe353de333fecee1fa02@o4511604336164864.ingest.de.sentry.io/4511604351041616"
       }
     }
   },
