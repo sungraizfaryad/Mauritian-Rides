@@ -34,7 +34,7 @@ function RootLayoutInner() {
   }, [session?.locale]);
 
   useEffect(() => {
-    if (session) void registerPushToken();
+    if (session?.userId) void registerPushToken();
   }, [session?.userId]);
 
   useEffect(() => {
