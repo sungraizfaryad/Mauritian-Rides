@@ -10,8 +10,9 @@ This document is the validated design for the cross-platform Mauritian Rides mob
 
 ### Goals
 
-- Ship a single binary, single codebase, iOS + Android app that serves three personas: anonymous guest, authenticated rider, authenticated driver.
-- Reuse the existing WordPress + WooCommerce + MIPS backend (`mauritianrides.com`). No new server stack.
+- Ship a single codebase, iOS + Android native app that serves three personas: anonymous guest, authenticated rider, authenticated driver. A proper native app (not a WebView, not an embedded site) that fetches everything from the WordPress REST API.
+- Reuse the existing WordPress + WooCommerce + MIPS backend (`mauritianrides.com`). No new server stack. The same database serves both the existing responsive website and the native app via the REST API.
+- Feel like one product across the responsive website and the native app by sharing a **design language** — the basalt/lagoon palette, typography, nav patterns, and card layouts — not by sharing code. The existing WordPress site already works on mobile browsers and already does booking; on a phone it is restyled to read like the app (a WordPress-side task, see §2a).
 - Provide live two-way GPS tracking during accepted rides: driver shares position, rider sees it on a map.
 - Support EN + FR throughout.
 - Be reachable through the existing `mauritianrides.com` brand: deep links from web URLs open the app when installed.
@@ -23,8 +24,31 @@ This document is the validated design for the cross-platform Mauritian Rides mob
 - Stripe card payments for riders (MCB Juice / MIPS covers v1).
 - Phone OTP auth (deferred; JWT issued post-OTP slot reserved in token shape).
 - In-app turn-by-turn navigation (deep-link to Apple Maps / Google Maps instead).
-- A web dashboard or web admin (out of scope; mobile only).
+- **A React-Native-Web build / `app.mauritianrides.com`.** The interactive booking/driver experience already exists on the responsive WordPress site for browser users; rebuilding it as an RN web app would duplicate a working, SEO-indexed front-end. The native app is mobile-only (iOS + Android); browser users keep using the responsive WordPress site. Revisit only if install-free web booking becomes a confirmed need.
+- A native web admin dashboard (admin stays in WP Admin).
 - Background driver location when no active ride.
+
+---
+
+## 2a. Web + app relationship (two surfaces, one database)
+
+Decision (2026-06-21): keep the existing responsive WordPress site for all browser users; ship a separate native app for the installed experience. They share a database and a design language — not code. This is the standard pattern for a business that already has a working, SEO-indexed responsive site and is adding a native app.
+
+| Surface | Tech | Role |
+|---|---|---|
+| `mauritianrides.com` — everything: marketing, blog, legal, rider booking, driver signup/dashboard, payments | WordPress (existing, kept) | Already responsive across desktop / tablet / mobile. Already does the full booking + driver flow. Server-rendered, SEO-indexed (12 articles, JSON-LD, sitemap, llms.txt). On a phone, restyled to read like the native app — same basalt/lagoon palette, typography, nav chrome, card layouts. |
+| Native app — guest browse, rider booking + live tracking, driver feed/accept/docs/plan | React Native (this repo) | Proper native iOS + Android binaries. Adds native-only powers the website can't give: push notifications, live GPS tracking, camera document capture, offline cache, biometric unlock. Fetches the same data over REST. |
+| Data | WordPress REST API (`/wp-json/mr/v1/`) | One database serves both the responsive website and the native app. |
+
+How "one product" is achieved:
+
+- **Shared design language, not shared code.** Both surfaces follow the same design tokens (the basalt/lagoon palette in `src/theme/` mirrors the WordPress theme's). A user moving from the phone website to the installed app sees the same look and navigation.
+- **The website is not embedded in the app, and the app does not embed the website.** The native app is 100% native and talks only to the REST API.
+- **Deep links** from `mauritianrides.com` URLs open the native app when installed, else fall back to the responsive site (§14).
+
+The tradeoff accepted: design parity is maintained by visually matching two codebases (WP PHP theme + RN app) rather than sharing one. Drift is mitigated by both following the same tokens and by the screens being simple. Rejected alternative: a React-Native-Web build at `app.mauritianrides.com` — it would duplicate the already-working, SEO-indexed WordPress booking front-end for no net gain to a solo maintainer.
+
+The WordPress mobile restyle is **WordPress-side work** (the `mauritianrides` theme), tracked separately from this app repo's plan. It is not a build target of this Expo project.
 
 ---
 
@@ -393,6 +417,8 @@ Channels map to branches: `production-2.14.1` → `production` channel. Rollback
 | **4 — Hardening + ship** | 3 | OWASP audit, account deletion screen, Sentry/PostHog wired on all critical paths, Maestro 5 flows green, App Store + Play Store metadata in EN + FR, first production submission |
 
 Total: ~14 weeks, single developer (Sungraiz).
+
+**Separate, WordPress-side track (not in this repo's plan):** restyle the responsive `mauritianrides` theme's mobile view to match the app's design language (basalt/lagoon palette, nav chrome, card layouts) so the phone website and the native app read as one product. Sequence whenever convenient; it does not block any app phase.
 
 Go/no-go check between phases is gated on a measurable acceptance criterion (see research dossier §06 for the full list); phases never overlap.
 
