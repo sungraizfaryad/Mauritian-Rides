@@ -12,6 +12,14 @@
   },
   "auth": {
     "login_title": "Sign in",
-    "register_title": "Create account"
+    "register_title": "Create account",
+    "email_label": "Email",
+    "password_label": "Password",
+    "sign_in_cta": "Sign in",
+    "no_account": "New here? Create an account",
+    "have_account": "Already have an account? Sign in",
+    "invalid_credentials": "Wrong email or password.",
+    "email_invalid": "Enter a valid email.",
+    "password_short": "At least 8 characters."
   }
 }

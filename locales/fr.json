@@ -12,6 +12,14 @@
   },
   "auth": {
     "login_title": "Connexion",
-    "register_title": "Créer un compte"
+    "register_title": "Créer un compte",
+    "email_label": "E-mail",
+    "password_label": "Mot de passe",
+    "sign_in_cta": "Se connecter",
+    "no_account": "Nouveau ? Créer un compte",
+    "have_account": "Déjà un compte ? Se connecter",
+    "invalid_credentials": "E-mail ou mot de passe incorrect.",
+    "email_invalid": "Entrez un e-mail valide.",
+    "password_short": "Au moins 8 caractères."
   }
 }
