@@ -46,8 +46,7 @@ export default function RideDetail() {
   useEffect(() => {
     const status = booking.data?.status;
     if (status === 'completed' || status === 'cancelled') {
-      void stopSharing();
-      setSharing(false);
+      void stopSharing().then(() => setSharing(false));
     }
     if (status === 'completed') {
       track('booking_completed', { booking_id: booking.data?.id ?? 0 });

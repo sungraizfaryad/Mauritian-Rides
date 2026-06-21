@@ -22,7 +22,7 @@ function RootLayoutInner() {
   const firstSegment = segments[0];
   const [i18nReady, setI18nReady] = useState(false);
   const [bootDone, setBootDone] = useState(false);
-  const [showConsent, setShowConsent] = useState(false);
+  const [showConsent, setShowConsent] = useState(() => !consentStore.hasShown());
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -44,11 +44,6 @@ function RootLayoutInner() {
   useEffect(() => {
     if (session?.userId) void registerPushToken();
   }, [session?.userId]);
-
-  // Show the consent sheet once on first boot, after everything else is ready.
-  useEffect(() => {
-    if (bootDone && !consentStore.hasShown()) setShowConsent(true);
-  }, [bootDone]);
 
   // Set guest persona when no session, so PostHog has a persona property even pre-login.
   useEffect(() => {
@@ -115,7 +110,7 @@ function RootLayoutInner() {
         <Stack.Screen name="(driver)" />
         <Stack.Screen name="payment-return" />
       </Stack>
-      {showConsent && (
+      {bootDone && showConsent && (
         <ConsentSheet
           onAccept={() => {
             consentStore.markShown();
