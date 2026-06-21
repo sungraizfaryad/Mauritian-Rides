@@ -1,3 +1,14 @@
+jest.mock('@/lib/observability/analytics', () => ({
+  track: jest.fn(),
+  identifyUser: jest.fn(),
+  setGuestPersona: jest.fn(),
+  resetIdentity: jest.fn(),
+  grantConsent: jest.fn(),
+  revokeConsent: jest.fn(),
+}));
+jest.mock('@/lib/observability/sentry', () => ({
+  Sentry: { captureException: jest.fn(), init: jest.fn(), captureMessage: jest.fn() },
+}));
 jest.mock('@/lib/maps/RideMap');
 const mockReplace = jest.fn();
 jest.mock('expo-router', () => ({ router: { replace: (...a: unknown[]) => mockReplace(...a) } }));

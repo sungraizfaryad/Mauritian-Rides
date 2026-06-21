@@ -9,6 +9,7 @@ import { useDriverBooking } from '@/features/driver/useDriverBooking';
 import { useAcceptBooking } from '@/features/driver/useAcceptBooking';
 import { useCancelBooking } from '@/features/driver/useCancelBooking';
 import { startSharing, stopSharing } from '@/lib/location/rideShare';
+import { track } from '@/lib/observability/analytics';
 import { useTrackingStore } from '@/lib/stores/useTrackingStore';
 import type { ApiError } from '@/lib/api/client';
 
@@ -47,6 +48,9 @@ export default function RideDetail() {
     if (status === 'completed' || status === 'cancelled') {
       void stopSharing();
       setSharing(false);
+    }
+    if (status === 'completed') {
+      track('booking_completed', { booking_id: booking.data?.id ?? 0 });
     }
   }, [booking.data?.status]);
 

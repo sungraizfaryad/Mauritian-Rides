@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
 import { View, Text, Pressable, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { FlashList } from '@shopify/flash-list';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFeed, type OpenRide } from '@/features/driver/useFeed';
+import { track } from '@/lib/observability/analytics';
 
 function RideCard({ ride }: { ride: OpenRide }) {
   const { t } = useTranslation();
@@ -29,6 +31,8 @@ function RideCard({ ride }: { ride: OpenRide }) {
 export default function DriverFeed() {
   const { t } = useTranslation();
   const { data, isLoading, isRefetching, refetch } = useFeed();
+
+  useEffect(() => { track('ride_feed_viewed'); }, []);
 
   if (isLoading) {
     return (

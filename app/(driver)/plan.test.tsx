@@ -1,4 +1,14 @@
 // app/(driver)/plan.test.tsx
+const mockTrack = jest.fn();
+jest.mock('@/lib/observability/analytics', () => ({
+  track: (...a: unknown[]) => mockTrack(...a),
+  identifyUser: jest.fn(),
+  setGuestPersona: jest.fn(),
+  resetIdentity: jest.fn(),
+  grantConsent: jest.fn(),
+  revokeConsent: jest.fn(),
+}));
+
 import type { Plan } from '@/lib/payments/openUpgrade';
 
 const mockOpenUpgrade = jest.fn((_plan: Plan, _qc: unknown) =>
@@ -16,6 +26,7 @@ describe('PlanScreen', () => {
   afterEach(() => {
     mockCapState.reached = false;
     mockOpenUpgrade.mockClear();
+    mockTrack.mockClear();
   });
 
   it('renders the cap usage display and at least one upgrade button', async () => {
@@ -29,6 +40,16 @@ describe('PlanScreen', () => {
     mockCapState.reached = true;
     render(<PlanScreen />);
     await waitFor(() => expect(screen.getByTestId('cap-reached-banner')).toBeTruthy());
+  });
+
+  it('fires cap_warning_shown when pct >= 80', async () => {
+    mockCapState.reached = true;
+    render(<PlanScreen />);
+    await waitFor(() => expect(screen.getByTestId('cap-used')).toBeTruthy());
+    expect(mockTrack).toHaveBeenCalledWith(
+      'cap_warning_shown',
+      expect.objectContaining({ pct: 100 }),
+    );
   });
 
   it('calls openUpgrade with the selected plan when an upgrade button is pressed', async () => {

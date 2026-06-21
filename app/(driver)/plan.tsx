@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
@@ -6,6 +6,7 @@ import { Screen } from '@/components/ui/Screen';
 import { Button } from '@/components/ui/Button';
 import { useCap } from '@/features/driver/useCap';
 import { openUpgrade, type Plan } from '@/lib/payments/openUpgrade';
+import { track } from '@/lib/observability/analytics';
 
 const UPGRADE_OPTIONS: { plan: Plan; labelKey: string }[] = [
   { plan: 'silver', labelKey: 'driver.plan_silver' },
@@ -29,6 +30,14 @@ export default function PlanScreen() {
     if (result === 'error') setUpgradeMsg(t('driver.upgrade_failed'));
   }
 
+  const pct = data != null && data.limit > 0 ? Math.round((data.used / data.limit) * 100) : 0;
+
+  useEffect(() => {
+    if (data !== undefined && pct >= 80) {
+      track('cap_warning_shown', { pct, plan: data.plan });
+    }
+  }, [pct, data]);
+
   if (isLoading || !data) {
     return (
       <Screen testID="plan-screen" contentClassName="items-center justify-center">
@@ -36,8 +45,6 @@ export default function PlanScreen() {
       </Screen>
     );
   }
-
-  const pct = data.limit > 0 ? Math.round((data.used / data.limit) * 100) : 0;
   // Only show upgrade buttons for plans that are higher than the current one.
   const orderedPlans: Plan[] = ['silver', 'gold', 'fleet'];
   const currentRank = orderedPlans.indexOf(data.plan as Plan);

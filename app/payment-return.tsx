@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { track } from '@/lib/observability/analytics';
 
 export default function PaymentReturn() {
   const { t } = useTranslation();
@@ -13,13 +14,15 @@ export default function PaymentReturn() {
   useEffect(() => {
     // Invalidate unconditionally — the deep-link arriving means the payment session ended.
     void qc.invalidateQueries({ queryKey: ['me', 'cap'] });
-
+    if (status === 'success') {
+      track('plan_upgrade_completed');
+    }
     const timer = setTimeout(() => {
       router.replace('/(driver)/feed');
     }, 1200);
 
     return () => clearTimeout(timer);
-  }, [qc]);
+  }, [qc, status]);
 
   const success = status === 'success';
 

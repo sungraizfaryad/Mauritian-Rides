@@ -1,3 +1,17 @@
+const mockTrack = jest.fn();
+jest.mock('@/lib/observability/analytics', () => ({
+  track: (...a: unknown[]) => mockTrack(...a),
+  identifyUser: jest.fn(),
+  setGuestPersona: jest.fn(),
+  resetIdentity: jest.fn(),
+  grantConsent: jest.fn(),
+  revokeConsent: jest.fn(),
+}));
+const mockCaptureException = jest.fn();
+jest.mock('@/lib/observability/sentry', () => ({
+  Sentry: { captureException: (...a: unknown[]) => mockCaptureException(...a), init: jest.fn(), captureMessage: jest.fn() },
+}));
+
 jest.mock('@/lib/maps/RideMap');
 jest.mock('@/lib/location/rideShare', () => ({
   startSharing: jest.fn(async () => ({ status: 'ok' })),
@@ -30,6 +44,7 @@ describe('RideDetail', () => {
   afterEach(() => {
     mockAcceptScenario.mode = '200';
     mockReplace.mockClear();
+    mockTrack.mockClear();
     mockCancelMutateAsync.mockClear();
     (startSharing as jest.Mock).mockClear();
     (stopSharing as jest.Mock).mockClear();
@@ -145,5 +160,9 @@ describe('RideDetail', () => {
 
     render(<RideDetail />);
     await waitFor(() => expect(stopSharing).toHaveBeenCalled());
+    expect(mockTrack).toHaveBeenCalledWith(
+      'booking_completed',
+      expect.objectContaining({ booking_id: expect.any(Number) }),
+    );
   });
 });

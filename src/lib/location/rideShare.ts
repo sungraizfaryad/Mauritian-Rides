@@ -2,6 +2,7 @@ import * as Location from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
 import { Platform } from 'react-native';
 import { api } from '@/lib/api/client';
+import { track } from '@/lib/observability/analytics';
 import { locationQueue } from '@/lib/stores/locationQueue';
 import { useTrackingStore } from '@/lib/stores/useTrackingStore';
 
@@ -48,6 +49,9 @@ TaskManager.defineTask(
           locationQueue.enqueue(item);
         });
     }
+    // getPostHog() may be null on the very first invocation if init hasn't completed
+    // (app boot race). Subsequent invocations are fine. Best-effort telemetry.
+    track('driver_location_streamed', { ride_id: activeRideId, batch_size: batch.length });
   },
 );
 

@@ -12,31 +12,24 @@ jest.mock('@/lib/observability/sentry', () => ({
   Sentry: { captureException: (...a: unknown[]) => mockCaptureException(...a), init: jest.fn(), captureMessage: jest.fn() },
 }));
 
-import { renderHook, waitFor } from '@testing-library/react-native';
+import { renderHook, waitFor, act } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { useCreateBooking } from './useCreateBooking';
+import { useCancelBooking } from './useCancelBooking';
 
 function wrap({ children }: { children: ReactNode }) {
   const client = new QueryClient({ defaultOptions: { mutations: { retry: false } } });
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 }
 
-describe('useCreateBooking', () => {
+describe('useCancelBooking', () => {
   afterEach(() => mockTrack.mockClear());
 
-  it('posts the draft and returns a booking with a ref', async () => {
-    const { result } = renderHook(() => useCreateBooking(), { wrapper: wrap });
-    result.current.mutate({
-      pickup: { latitude: -20.16, longitude: 57.5, label: 'Port Louis' },
-      dropoff: 'Grand Baie',
-      passengers: 2,
-    });
+  it('resolves with status cancelled and fires booking_cancelled event', async () => {
+    const { result } = renderHook(() => useCancelBooking(), { wrapper: wrap });
+    act(() => { result.current.mutate({ bookingId: 101 }); });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data?.ref).toMatch(/^MR-/);
-    expect(mockTrack).toHaveBeenCalledWith(
-      'booking_created',
-      expect.objectContaining({ ref: expect.stringMatching(/^MR-/) }),
-    );
+    expect(result.current.data?.status).toBe('cancelled');
+    expect(mockTrack).toHaveBeenCalledWith('booking_cancelled', { booking_id: 101 });
   });
 });

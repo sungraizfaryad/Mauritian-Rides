@@ -1,4 +1,18 @@
 // src/lib/payments/openUpgrade.test.ts
+const mockTrack = jest.fn();
+jest.mock('@/lib/observability/analytics', () => ({
+  track: (...a: unknown[]) => mockTrack(...a),
+  identifyUser: jest.fn(),
+  setGuestPersona: jest.fn(),
+  resetIdentity: jest.fn(),
+  grantConsent: jest.fn(),
+  revokeConsent: jest.fn(),
+}));
+const mockCaptureException = jest.fn();
+jest.mock('@/lib/observability/sentry', () => ({
+  Sentry: { captureException: (...a: unknown[]) => mockCaptureException(...a), init: jest.fn(), captureMessage: jest.fn() },
+}));
+
 import * as WebBrowser from 'expo-web-browser';
 import { QueryClient } from '@tanstack/react-query';
 import { openUpgrade } from './openUpgrade';
@@ -9,6 +23,7 @@ describe('openUpgrade', () => {
   beforeEach(() => {
     qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     (WebBrowser.openAuthSessionAsync as jest.Mock).mockClear();
+    mockTrack.mockClear();
   });
 
   it('returns cancel when the user closes the browser', async () => {
@@ -19,6 +34,7 @@ describe('openUpgrade', () => {
       expect.stringContaining('silver'),
       'mr://payment-return',
     );
+    expect(mockTrack).toHaveBeenCalledWith('plan_upgrade_started', { plan: 'silver' });
   });
 
   it('returns success and invalidates the cap query on a success result', async () => {
