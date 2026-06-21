@@ -7,6 +7,10 @@ export const mockState = { accessTokenValid: true };
 let mockBookingSeq = 0;
 let mockDriverDrift = 0;
 
+export const mockAcceptScenario: { mode: '200' | '402' | '409' } = { mode: '200' };
+export const mockCapState: { reached: boolean } = { reached: false };
+export const mockDocUploadFail: { fail: boolean } = { fail: false };
+
 export const handlers = [
   http.post(`${BASE}/auth/token`, async ({ request }) => {
     await delay(50);
@@ -136,4 +140,115 @@ export const handlers = [
   }),
 
   http.post(`${BASE}/auth/revoke`, () => new HttpResponse(null, { status: 204 })),
+
+  http.get(`${BASE}/rides/feed`, () =>
+    HttpResponse.json([
+      {
+        id: 101,
+        ref: 'MR-20260622-0101',
+        status: 'open',
+        pickup: 'Port Louis',
+        pickup_lat: -20.1609,
+        pickup_lng: 57.5012,
+        dropoff: 'Grand Baie',
+        passengers: 2,
+        fare: '1500.00',
+        distance_km: 1.2,
+        created_at: '2026-06-22T08:00:00.000Z',
+      },
+      {
+        id: 102,
+        ref: 'MR-20260622-0102',
+        status: 'open',
+        pickup: 'Curepipe',
+        pickup_lat: -20.3160,
+        pickup_lng: 57.5125,
+        dropoff: 'Mahebourg',
+        passengers: 1,
+        fare: '900.00',
+        distance_km: 4.7,
+        created_at: '2026-06-22T08:15:00.000Z',
+      },
+    ]),
+  ),
+
+  // Numeric booking lookup for the driver detail screen.
+  // The existing GET /bookings/:ref handler uses a string ref; this one takes a numeric id.
+  http.get(`${BASE}/bookings/by-id/:id`, ({ params }) =>
+    HttpResponse.json({
+      id: Number(params.id),
+      ref: `MR-20260622-${String(params.id).padStart(4, '0')}`,
+      status: 'open',
+      pickup: 'Port Louis',
+      pickup_lat: -20.1609,
+      pickup_lng: 57.5012,
+      dropoff: 'Grand Baie',
+      passengers: 2,
+      accepted_by: null,
+      fare: '1500.00',
+      created_at: '2026-06-22T08:00:00.000Z',
+    }),
+  ),
+
+  http.post(`${BASE}/bookings/:id/accept`, async ({ params }) => {
+    await delay(80);
+    if (mockAcceptScenario.mode === '402') {
+      return HttpResponse.json(
+        { code: 'cap_reached', message: 'Monthly cap reached. Upgrade your plan to accept more rides.' },
+        { status: 402 },
+      );
+    }
+    if (mockAcceptScenario.mode === '409') {
+      return HttpResponse.json(
+        { code: 'race_lost', message: 'Another driver accepted this ride first.' },
+        { status: 409 },
+      );
+    }
+    return HttpResponse.json({
+      id: Number(params.id),
+      status: 'accepted',
+      accepted_by: 2,
+      accepted_at: '2026-06-22T09:00:00.000Z',
+    });
+  }),
+
+  http.post(`${BASE}/bookings/:id/cancel`, async () => {
+    await delay(60);
+    return HttpResponse.json({ status: 'cancelled' });
+  }),
+
+  http.post(`${BASE}/rides/:id/location`, async () => {
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.get(`${BASE}/me/cap`, () =>
+    HttpResponse.json({
+      plan: 'free',
+      used: mockCapState.reached ? 10 : 3,
+      limit: 10,
+      reached: mockCapState.reached,
+      reset_at: '2026-07-01T00:00:00.000Z',
+    }),
+  ),
+
+  http.get(`${BASE}/me/upgrade-url`, ({ request }) => {
+    const plan = new URL(request.url).searchParams.get('plan') ?? 'silver';
+    return HttpResponse.json({
+      url: `https://mauritianrides.com/checkout/upgrade?plan=${plan}&nonce=mock123`,
+    });
+  }),
+
+  http.post(`${BASE}/drivers/documents/:slug`, async ({ params }) => {
+    await delay(80);
+    if (mockDocUploadFail.fail) {
+      return HttpResponse.json(
+        { code: 'unsupported_media_type', message: 'Unsupported file type.' },
+        { status: 415 },
+      );
+    }
+    return HttpResponse.json(
+      { slug: params.slug, status: 'pending', uploaded_at: '2026-06-22T09:00:00.000Z' },
+      { status: 201 },
+    );
+  }),
 ];
