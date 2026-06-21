@@ -42,7 +42,7 @@ describe('PlanScreen', () => {
     await waitFor(() => expect(screen.getByTestId('cap-reached-banner')).toBeTruthy());
   });
 
-  it('fires cap_warning_shown when pct >= 80', async () => {
+  it('fires cap_warning_shown exactly once when pct >= 80', async () => {
     mockCapState.reached = true;
     render(<PlanScreen />);
     await waitFor(() => expect(screen.getByTestId('cap-used')).toBeTruthy());
@@ -50,6 +50,7 @@ describe('PlanScreen', () => {
       'cap_warning_shown',
       expect.objectContaining({ pct: 100 }),
     );
+    expect(mockTrack).toHaveBeenCalledTimes(1);
   });
 
   it('calls openUpgrade with the selected plan when an upgrade button is pressed', async () => {

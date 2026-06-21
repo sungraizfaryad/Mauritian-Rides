@@ -13,9 +13,10 @@ jest.mock('@/lib/observability/analytics', () => ({
 import { renderHook, waitFor, act } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
+import * as SecureStore from 'expo-secure-store';
 import { useDeleteAccount } from '@/lib/auth/useAuth';
 import { useAuthStore } from '@/lib/auth/store';
-import { setAccessToken, getAccessToken } from '@/lib/auth/tokens';
+import { setAccessToken, getAccessToken, setRefreshToken } from '@/lib/auth/tokens';
 import { mockDeleteAccountScenario } from '@/mocks/handlers';
 
 function wrap({ children }: { children: ReactNode }) {
@@ -24,10 +25,12 @@ function wrap({ children }: { children: ReactNode }) {
 }
 
 describe('useDeleteAccount', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     mockDeleteAccountScenario.mode = '204';
     mockResetIdentity.mockClear();
+    jest.mocked(SecureStore.deleteItemAsync).mockClear();
     setAccessToken('test-access-token');
+    await setRefreshToken('test-refresh-token');
     useAuthStore.getState().setSession({
       userId: 1,
       persona: 'rider',
@@ -46,6 +49,7 @@ describe('useDeleteAccount', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(useAuthStore.getState().session).toBeNull();
     expect(getAccessToken()).toBeNull();
+    expect(jest.mocked(SecureStore.deleteItemAsync)).toHaveBeenCalled();
     expect(mockResetIdentity).toHaveBeenCalled();
   });
 

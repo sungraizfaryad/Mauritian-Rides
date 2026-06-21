@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
@@ -20,6 +20,7 @@ export default function PlanScreen() {
   const { data, isLoading } = useCap();
   const [upgrading, setUpgrading] = useState(false);
   const [upgradeMsg, setUpgradeMsg] = useState<string | null>(null);
+  const capWarnFired = useRef(false);
 
   async function onUpgrade(plan: Plan) {
     setUpgrading(true);
@@ -34,7 +35,12 @@ export default function PlanScreen() {
 
   useEffect(() => {
     if (data !== undefined && pct >= 80) {
-      track('cap_warning_shown', { pct, plan: data.plan });
+      if (!capWarnFired.current) {
+        capWarnFired.current = true;
+        track('cap_warning_shown', { pct, plan: data.plan });
+      }
+    } else {
+      capWarnFired.current = false;
     }
   }, [pct, data]);
 

@@ -25,7 +25,7 @@ jobs:
         run: npm test -- --forceExit --ci
 
       - name: Push OTA update
-        run: npx eas-cli update --branch main --message "OTA $GIT_SHA" --non-interactive
+        run: npx eas-cli@13 update --branch main --message "OTA $GIT_SHA" --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           GIT_SHA: ${{ github.sha }}

@@ -67,11 +67,15 @@ export function useLogout() {
 export function useDeleteAccount() {
   return useMutation({
     mutationFn: async () => {
+      const refreshToken = await getRefreshToken();
+      if (refreshToken) {
+        await api.post('/auth/revoke', { refresh_token: refreshToken }).catch(() => undefined);
+      }
       await api.delete('/me/account');
       clearAccessToken();
       await clearRefreshToken();
       useAuthStore.getState().clearSession();
-      resetIdentity(); // clear PostHog identity — account deletion is permanent
+      resetIdentity();
     },
   });
 }
