@@ -17,9 +17,11 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: '101' }),
 }));
 
+import { http, HttpResponse } from 'msw';
 import { act, render, screen, fireEvent, waitFor } from '@/test-utils/render';
 import { userEvent } from '@testing-library/react-native';
 import { mockAcceptScenario } from '@/mocks/handlers';
+import { server } from '@/mocks/server';
 import { startSharing, stopSharing } from '@/lib/location/rideShare';
 import { useTrackingStore } from '@/lib/stores/useTrackingStore';
 import RideDetail from './[id]';
@@ -117,5 +119,31 @@ describe('RideDetail', () => {
     render(<RideDetail />);
     await waitFor(() => expect(screen.getByTestId('accept-btn')).toBeTruthy());
     expect(screen.getByTestId('marker-driver')).toBeTruthy();
+  });
+
+  it('calls stopSharing when the booking status is completed on load', async () => {
+    // Simulate receiving a completed booking status (e.g. from a background poll
+    // arriving after the ride ended). The useEffect watching booking.data?.status
+    // should call stopSharing whenever it sees completed or cancelled.
+    server.use(
+      http.get('https://mauritianrides.com/wp-json/mr/v1/bookings/by-id/:id', () =>
+        HttpResponse.json({
+          id: 101,
+          ref: 'MR-20260622-0101',
+          status: 'completed',
+          pickup: 'Port Louis',
+          pickup_lat: -20.1609,
+          pickup_lng: 57.5012,
+          dropoff: 'Grand Baie',
+          passengers: 2,
+          accepted_by: 2,
+          fare: '1500.00',
+          created_at: '2026-06-22T08:00:00.000Z',
+        }),
+      ),
+    );
+
+    render(<RideDetail />);
+    await waitFor(() => expect(stopSharing).toHaveBeenCalled());
   });
 });

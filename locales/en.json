@@ -99,6 +99,11 @@
     "upgrade_cta": "Upgrade to accept more rides this month",
     "upgrade_opening": "Opening payment…",
     "upgrade_cancelled": "Upgrade cancelled.",
-    "upgrade_failed": "Could not open the upgrade page. Try again."
+    "upgrade_failed": "Could not open the upgrade page. Try again.",
+    "driver_label": "Driver"
+  },
+  "payment": {
+    "upgraded_title": "Plan upgraded",
+    "returning": "Returning to your feed"
   }
 }

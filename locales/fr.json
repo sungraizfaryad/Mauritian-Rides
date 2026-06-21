@@ -99,6 +99,11 @@
     "upgrade_cta": "Améliorer pour accepter plus de courses ce mois",
     "upgrade_opening": "Ouverture du paiement…",
     "upgrade_cancelled": "Amélioration annulée.",
-    "upgrade_failed": "Impossible d'ouvrir la page d'amélioration. Réessayez."
+    "upgrade_failed": "Impossible d'ouvrir la page d'amélioration. Réessayez.",
+    "driver_label": "Chauffeur"
+  },
+  "payment": {
+    "upgraded_title": "Forfait amélioré",
+    "returning": "Retour à votre fil"
   }
 }

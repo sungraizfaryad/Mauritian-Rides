@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -23,15 +23,32 @@ export default function RideDetail() {
 
   const [error, setError] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
+  // keep a ref so the unmount cleanup always sees the latest value without
+  // re-registering the effect (which would cause a double-stop on manual cancel)
+  const sharingRef = useRef(false);
 
   const lastDriverPosition = useTrackingStore((s) => s.lastDriverPosition);
 
-  // stop location task when navigating away while sharing
+  // stop location task on unmount only
   useEffect(() => {
     return () => {
-      if (sharing) void stopSharing();
+      if (sharingRef.current) void stopSharing();
     };
+  }, []);
+
+  // keep ref in sync
+  useEffect(() => {
+    sharingRef.current = sharing;
   }, [sharing]);
+
+  // spec §7: stop sharing automatically when the ride ends
+  useEffect(() => {
+    const status = booking.data?.status;
+    if (status === 'completed' || status === 'cancelled') {
+      void stopSharing();
+      setSharing(false);
+    }
+  }, [booking.data?.status]);
 
   async function onAccept() {
     setError(null);

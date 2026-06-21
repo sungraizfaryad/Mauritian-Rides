@@ -25,6 +25,7 @@ describe('rider i18n', () => {
       'driver.plan_title',
       'driver.upgrade_cta',
       'driver.live_share_active',
+      'driver.driver_label',
     ];
     expect(flat(en)).toEqual(expect.arrayContaining(requiredDriverKeys));
     expect(flat(fr)).toEqual(expect.arrayContaining(requiredDriverKeys));
