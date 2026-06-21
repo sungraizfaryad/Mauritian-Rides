@@ -27,5 +27,38 @@
     "role_driver": "Conduire & gagner",
     "create_cta": "Créer un compte",
     "name_required": "Entrez votre nom."
+  },
+  "booking": {
+    "title": "Réserver une course",
+    "pickup_label": "Départ",
+    "pickup_placeholder": "Choisissez le départ sur la carte",
+    "dropoff_label": "Destination",
+    "dropoff_placeholder": "Où allez-vous ?",
+    "passengers_label": "Passagers",
+    "confirm_cta": "Confirmer la réservation",
+    "use_my_location": "Utiliser ma position",
+    "set_pickup_cta": "Définir le départ ici",
+    "locating": "Localisation en cours…",
+    "location_denied": "Localisation désactivée. Choisissez le départ sur la carte.",
+    "dropoff_required": "Entrez une destination.",
+    "pickup_required": "Choisissez un point de départ.",
+    "create_failed": "Échec de la réservation. Réessayez."
+  },
+  "tracker": {
+    "title": "Votre course",
+    "status_open": "Recherche d'un chauffeur…",
+    "status_accepted": "Chauffeur en route",
+    "status_completed": "Course terminée",
+    "status_cancelled": "Course annulée",
+    "status_expired": "Aucun chauffeur trouvé",
+    "pickup_pin": "Départ",
+    "driver_pin": "Chauffeur",
+    "fare": "Tarif",
+    "waiting_location": "En attente de la position du chauffeur…"
+  },
+  "trips": {
+    "title": "Vos courses",
+    "empty": "Aucune course pour l'instant. Réservez votre première course.",
+    "book_cta": "Réserver une course"
   }
 }

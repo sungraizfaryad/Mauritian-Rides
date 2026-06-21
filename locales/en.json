@@ -27,5 +27,38 @@
     "role_driver": "Drive & earn",
     "create_cta": "Create account",
     "name_required": "Enter your name."
+  },
+  "booking": {
+    "title": "Book a ride",
+    "pickup_label": "Pickup",
+    "pickup_placeholder": "Choose pickup on the map",
+    "dropoff_label": "Drop-off",
+    "dropoff_placeholder": "Where to?",
+    "passengers_label": "Passengers",
+    "confirm_cta": "Confirm booking",
+    "use_my_location": "Use my location",
+    "set_pickup_cta": "Set pickup here",
+    "locating": "Finding your location…",
+    "location_denied": "Location permission is off. Enter pickup on the map instead.",
+    "dropoff_required": "Enter a drop-off.",
+    "pickup_required": "Choose a pickup point.",
+    "create_failed": "Could not create the booking. Try again."
+  },
+  "tracker": {
+    "title": "Your ride",
+    "status_open": "Looking for a driver…",
+    "status_accepted": "Driver on the way",
+    "status_completed": "Ride complete",
+    "status_cancelled": "Ride cancelled",
+    "status_expired": "No driver found",
+    "pickup_pin": "Pickup",
+    "driver_pin": "Driver",
+    "fare": "Fare",
+    "waiting_location": "Waiting for the driver to share location…"
+  },
+  "trips": {
+    "title": "Your trips",
+    "empty": "No rides yet. Book your first ride.",
+    "book_cta": "Book a ride"
   }
 }
