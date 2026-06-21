@@ -20,6 +20,12 @@
     "have_account": "Déjà un compte ? Se connecter",
     "invalid_credentials": "E-mail ou mot de passe incorrect.",
     "email_invalid": "Entrez un e-mail valide.",
-    "password_short": "Au moins 8 caractères."
+    "password_short": "Au moins 8 caractères.",
+    "name_label": "Votre nom",
+    "role_question": "Je veux…",
+    "role_rider": "Réserver des courses",
+    "role_driver": "Conduire & gagner",
+    "create_cta": "Créer un compte",
+    "name_required": "Entrez votre nom."
   }
 }
