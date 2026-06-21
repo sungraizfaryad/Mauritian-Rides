@@ -2,6 +2,7 @@ import axios, { type AxiosError, type AxiosInstance } from 'axios';
 import axiosRetry from 'axios-retry';
 import Constants from 'expo-constants';
 import { getAccessToken } from '@/lib/auth/tokens';
+import { installRefreshInterceptor } from './refresh';
 
 const baseURL =
   (Constants.expoConfig?.extra?.apiBaseUrl as string | undefined) ??
@@ -26,6 +27,11 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// Registered first → runs first on errors (FIFO). Sees raw AxiosError with .config/.response,
+// retries on 401 after refreshing. On refresh failure, rejects with the raw error so
+// normalize (registered second) can convert it to ApiError { status }.
+installRefreshInterceptor(api, baseURL);
 
 api.interceptors.response.use(
   (r) => r,

@@ -2,6 +2,8 @@ import { http, HttpResponse, delay } from 'msw';
 
 const BASE = 'https://mauritianrides.com/wp-json/mr/v1';
 
+export const mockState = { accessTokenValid: true };
+
 export const handlers = [
   http.post(`${BASE}/auth/token`, async () => {
     await delay(50);
@@ -18,6 +20,7 @@ export const handlers = [
 
   http.post(`${BASE}/auth/refresh`, async () => {
     await delay(20);
+    mockState.accessTokenValid = true;
     return HttpResponse.json({
       access_token: 'mock.jwt.access.refreshed',
       refresh_token: 'mock.refresh.rotated',
@@ -25,9 +28,9 @@ export const handlers = [
     });
   }),
 
-  http.get(`${BASE}/me`, async ({ request }) => {
-    if (!request.headers.get('Authorization')?.startsWith('Bearer ')) {
-      return HttpResponse.json({ code: 'unauthorized' }, { status: 401 });
+  http.get(`${BASE}/me`, () => {
+    if (!mockState.accessTokenValid) {
+      return HttpResponse.json({ code: 'jwt_expired', message: 'expired' }, { status: 401 });
     }
     return HttpResponse.json({
       user_id: 1,
