@@ -11,3 +11,23 @@ jest.mock('expo-secure-store', () => ({
   deleteItemAsync: jest.fn(async () => undefined),
   WHEN_UNLOCKED_THIS_DEVICE_ONLY: 1,
 }));
+
+jest.mock('expo-maps', () => ({
+  AppleMaps: { View: () => null },
+  GoogleMaps: { View: () => null },
+}));
+
+jest.mock('expo-location', () => ({
+  requestForegroundPermissionsAsync: jest.fn(async () => ({ status: 'granted' })),
+  getCurrentPositionAsync: jest.fn(async () => ({ coords: { latitude: -20.1609, longitude: 57.5012 } })),
+  reverseGeocodeAsync: jest.fn(async () => [{ name: 'Port Louis', city: 'Port Louis' }]),
+  Accuracy: { High: 4 },
+}));
+
+jest.mock('expo-notifications', () => ({
+  getPermissionsAsync: jest.fn(async () => ({ status: 'granted' })),
+  requestPermissionsAsync: jest.fn(async () => ({ status: 'granted' })),
+  getExpoPushTokenAsync: jest.fn(async () => ({ data: 'ExponentPushToken[test]' })),
+  setNotificationHandler: jest.fn(),
+  addNotificationResponseReceivedListener: jest.fn(() => ({ remove: jest.fn() })),
+}));

@@ -25,6 +25,11 @@ const config: ExpoConfig & { newArchEnabled?: boolean } = {
   },
   android: {
     package: 'com.mauritianrides.app',
+    config: {
+      googleMaps: {
+        apiKey: process.env.GOOGLE_MAPS_API_KEY_ANDROID ?? '',
+      },
+    },
     adaptiveIcon: {
       // Template ships android-icon-foreground.png; brand-specific asset lands later.
       foregroundImage: './assets/images/android-icon-foreground.png',
@@ -70,6 +75,13 @@ const config: ExpoConfig & { newArchEnabled?: boolean } = {
       },
     ],
     'expo-notifications',
+    [
+      'expo-maps',
+      {
+        requestLocationPermission: true,
+        locationPermission: 'See your pickup point on the map.',
+      },
+    ],
     [
       'expo-image-picker',
       {
