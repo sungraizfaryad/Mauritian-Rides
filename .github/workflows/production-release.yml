@@ -1,0 +1,52 @@
+# Triggers on a v* tag (e.g. v1.0.0). Builds production binaries via EAS and submits to stores.
+# Requires: EXPO_TOKEN, APPLE_ID, APPLE_APP_SPECIFIC_PASSWORD, GOOGLE_PLAY_JSON_KEY secrets.
+# On-device Maestro runs and store review are manual steps after the workflow completes.
+name: Production release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run tests
+        run: npm test -- --forceExit --ci
+
+      - name: Build iOS (production)
+        run: npx eas-cli build --platform ios --profile production --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build Android (production)
+        run: npx eas-cli build --platform android --profile production --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Submit iOS to App Store
+        # Requires APPLE_ID + APPLE_APP_SPECIFIC_PASSWORD secrets in GitHub settings.
+        # eas submit will find the latest build automatically.
+        run: npx eas-cli submit --platform ios --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+
+      - name: Submit Android to Play Store
+        # Requires a Google Play service-account JSON key stored as GOOGLE_PLAY_JSON_KEY.
+        run: npx eas-cli submit --platform android --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          GOOGLE_PLAY_JSON_KEY: ${{ secrets.GOOGLE_PLAY_JSON_KEY }}

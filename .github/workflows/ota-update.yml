@@ -1,0 +1,31 @@
+# Pushes an OTA update to the 'main' EAS update channel on every push to main.
+# Riders and drivers on preview/production builds receive the update on next app launch.
+# Requires: EXPO_TOKEN secret set in GitHub repo settings.
+name: OTA update
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run tests
+        run: npm test -- --forceExit --ci
+
+      - name: Push OTA update
+        run: npx eas-cli update --branch main --message "OTA $GIT_SHA" --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          GIT_SHA: ${{ github.sha }}
