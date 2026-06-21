@@ -63,3 +63,15 @@ export function useLogout() {
     },
   });
 }
+
+export function useDeleteAccount() {
+  return useMutation({
+    mutationFn: async () => {
+      await api.delete('/me/account');
+      clearAccessToken();
+      await clearRefreshToken();
+      useAuthStore.getState().clearSession();
+      resetIdentity(); // clear PostHog identity — account deletion is permanent
+    },
+  });
+}
