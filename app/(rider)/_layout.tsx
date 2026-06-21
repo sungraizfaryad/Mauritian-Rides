@@ -14,6 +14,7 @@ export default function RiderLayout() {
     >
       <Tabs.Screen name="index" options={{ title: t('booking.title') }} />
       <Tabs.Screen name="bookings/index" options={{ title: t('trips.title') }} />
+      <Tabs.Screen name="account" options={{ title: t('account.title') }} />
       <Tabs.Screen name="bookings/[ref]" options={{ href: null }} />
     </Tabs>
   );
