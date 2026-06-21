@@ -1,7 +1,7 @@
 import { Pressable, Text, ActivityIndicator, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 
-type Variant = 'primary' | 'secondary' | 'ghost';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
 
 interface ButtonProps {
   label: string;
@@ -16,12 +16,14 @@ const container: Record<Variant, string> = {
   primary: 'bg-amber-500',
   secondary: 'bg-lagoon-500',
   ghost: 'bg-transparent border border-basalt-500',
+  danger: 'bg-red-700',
 };
 
 const labelColor: Record<Variant, string> = {
   primary: 'text-basalt-900',
   secondary: 'text-basalt-900',
   ghost: 'text-lagoon-300',
+  danger: 'text-white',
 };
 
 export function Button({
