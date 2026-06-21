@@ -1,0 +1,13 @@
+# Shared subflow: log in as a driver.
+# Requires a test driver account (approved, with open rides in DB).
+# testIDs from app/(auth)/login.tsx.
+- tapOn:
+    id: login-email
+- inputText: "driver@test.com"
+- tapOn:
+    id: login-password
+- inputText: "TestPassword1!"
+- tapOn:
+    id: login-submit
+- assertVisible:
+    id: feed-card-1

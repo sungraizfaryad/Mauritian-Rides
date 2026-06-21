@@ -1,0 +1,15 @@
+# Flow 03: Driver sees the cap-reached banner on the Plan tab.
+# Requires test driver account at full cap (used == limit in DB).
+# testIDs from app/(driver)/plan.tsx.
+# DEFERRED: on-device execution.
+appId: com.mauritianrides.app
+---
+- launchApp:
+    clearState: true
+- runFlow: ./subflows/login-driver.yaml
+- tapOn:
+    text: "Ride cap & plan"
+- assertVisible:
+    id: cap-reached-banner
+- assertVisible:
+    text: "Upgrade your plan"

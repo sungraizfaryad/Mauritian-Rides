@@ -1,0 +1,22 @@
+# Flow 05: Driver uploads their driver licence document.
+# Requires a test photo seeded in the simulator's Photos library before running:
+#   xcrun simctl addmedia <device-udid> /path/to/test-doc.jpg
+# testIDs from app/(driver)/docs.tsx.
+# DEFERRED: on-device execution.
+appId: com.mauritianrides.app
+---
+- launchApp:
+    clearState: true
+    permissions:
+      photos: allow
+      camera: allow
+- runFlow: ./subflows/login-driver.yaml
+- tapOn:
+    text: "My documents"
+- assertVisible:
+    id: upload-license
+- tapOn:
+    id: upload-license
+# System photo picker appears — Maestro selects the first photo in the library.
+- assertVisible:
+    id: status-license

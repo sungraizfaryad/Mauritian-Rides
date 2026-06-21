@@ -1,0 +1,13 @@
+# Shared subflow: log in as a rider.
+# Requires a test rider account seeded in the environment DB.
+# testIDs from app/(auth)/login.tsx.
+- tapOn:
+    id: login-email
+- inputText: "rider@test.com"
+- tapOn:
+    id: login-password
+- inputText: "TestPassword1!"
+- tapOn:
+    id: login-submit
+- assertVisible:
+    id: booking-screen

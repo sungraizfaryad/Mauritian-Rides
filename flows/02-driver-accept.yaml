@@ -1,0 +1,22 @@
+# Flow 02: Driver accepts an open ride and location sharing starts.
+# Requires an open ride in the feed (seeded in DB).
+# testIDs from app/(driver)/feed.tsx and app/(driver)/ride/[id].tsx.
+# DEFERRED: on-device execution.
+appId: com.mauritianrides.app
+---
+- launchApp:
+    clearState: true
+    permissions:
+      location: allow
+      notifications: allow
+- runFlow: ./subflows/login-driver.yaml
+- assertVisible:
+    id: feed-card-1
+- tapOn:
+    id: feed-card-1
+- assertVisible:
+    id: accept-btn
+- tapOn:
+    id: accept-btn
+- assertVisible:
+    id: live-share-banner

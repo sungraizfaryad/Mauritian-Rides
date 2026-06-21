@@ -1,0 +1,20 @@
+# Flow 04: Driver taps the Silver upgrade button.
+# NOTE: MIPS payment page opens in ASWebAuthenticationSession (iOS) /
+# CustomTabsIntent (Android) — Maestro cannot drive an external browser.
+# This flow verifies the entry point only. Full round-trip (mr://payment-return)
+# requires a MIPS sandbox mode that redirects without UI — coordinate with MIPS/MCB.
+# testIDs from app/(driver)/plan.tsx.
+# DEFERRED: on-device execution.
+appId: com.mauritianrides.app
+---
+- launchApp:
+    clearState: true
+- runFlow: ./subflows/login-driver.yaml
+- tapOn:
+    text: "Ride cap & plan"
+- assertVisible:
+    id: upgrade-btn-silver
+- tapOn:
+    id: upgrade-btn-silver
+# External browser opens here — Maestro stops.
+# Manual verification: confirm MIPS page loads and mr://payment-return redirects correctly.

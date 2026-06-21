@@ -1,0 +1,25 @@
+# Flow 01: Rider creates a booking end-to-end.
+# testIDs from app/(public)/rides/book.tsx and src/features/bookings/PickupPicker.tsx.
+# DEFERRED: on-device execution — needs dev-client build + test DB.
+appId: com.mauritianrides.app
+---
+- launchApp:
+    clearState: true
+    permissions:
+      location: allow
+      notifications: allow
+- runFlow: ./subflows/login-rider.yaml
+- tapOn:
+    id: booking-open-picker
+- tapOn:
+    id: pickup-use-location
+- tapOn:
+    id: pickup-confirm
+- tapOn:
+    id: booking-dropoff
+- inputText: "Grand Baie"
+- scroll
+- tapOn:
+    id: booking-confirm
+- assertVisible:
+    text: "Looking for a driver"
