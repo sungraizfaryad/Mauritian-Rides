@@ -103,6 +103,11 @@ jest.mock('expo-image-picker', () => {
   };
 });
 
+jest.mock('expo-device', () => ({
+  isDevice: false, // default: emulator — root check skips
+  isRootedExperimentalAsync: jest.fn().mockResolvedValue(false),
+}));
+
 jest.mock('react-native-mmkv', () => {
   const mockStorage: Record<string, string> = {};
   // Named mockMMKV (lowercase 'm') — jest.mock factory closures may only reference

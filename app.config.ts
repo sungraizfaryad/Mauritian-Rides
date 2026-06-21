@@ -78,6 +78,7 @@ const config: ExpoConfig & { newArchEnabled?: boolean } = {
       },
     ],
     'expo-task-manager',
+    './plugins/withNetworkSecurity',
     'expo-notifications',
     [
       'expo-maps',
