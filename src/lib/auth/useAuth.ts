@@ -3,6 +3,7 @@ import { api } from '@/lib/api/client';
 import { useAuthStore, type Session, type Persona } from './store';
 import { setAccessToken, setRefreshToken, clearAccessToken, clearRefreshToken, getRefreshToken } from './tokens';
 import type { LoginInput, RegisterInput } from '@/schemas/auth';
+import { identifyUser, resetIdentity } from '@/lib/observability/analytics';
 
 interface TokenResponse {
   access_token: string;
@@ -26,6 +27,7 @@ async function persist(res: TokenResponse): Promise<Session> {
     plan: res.plan,
   };
   useAuthStore.getState().setSession(session);
+  identifyUser(session.userId, session.persona);
   return session;
 }
 
@@ -57,6 +59,7 @@ export function useLogout() {
       clearAccessToken();
       await clearRefreshToken();
       useAuthStore.getState().clearSession();
+      resetIdentity();
     },
   });
 }

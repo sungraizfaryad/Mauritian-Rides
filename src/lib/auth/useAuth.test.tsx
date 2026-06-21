@@ -1,3 +1,14 @@
+const mockResetIdentity = jest.fn();
+const mockIdentifyUser = jest.fn();
+jest.mock('@/lib/observability/analytics', () => ({
+  track: jest.fn(),
+  identifyUser: (...a: unknown[]) => mockIdentifyUser(...a),
+  setGuestPersona: jest.fn(),
+  resetIdentity: (...a: unknown[]) => mockResetIdentity(...a),
+  grantConsent: jest.fn(),
+  revokeConsent: jest.fn(),
+}));
+
 import { renderHook, waitFor, act } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
@@ -22,6 +33,7 @@ describe('useLogin', () => {
     });
     await waitFor(() => expect(useAuthStore.getState().session?.persona).toBe('rider'));
     expect(getAccessToken()).toBe('mock.jwt.access');
+    expect(mockIdentifyUser).toHaveBeenCalledWith(1, 'rider');
   });
 
   it('logs a driver in with persona driver', async () => {
@@ -41,5 +53,6 @@ describe('useLogout', () => {
       await result.current.mutateAsync();
     });
     await waitFor(() => expect(useAuthStore.getState().session).toBeNull());
+    expect(mockResetIdentity).toHaveBeenCalled();
   });
 });
