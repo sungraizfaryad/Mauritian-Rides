@@ -72,8 +72,12 @@ const config: ExpoConfig & { newArchEnabled?: boolean } = {
       {
         locationAlwaysAndWhenInUsePermission:
           'Share your live location with the rider during an active ride.',
+        locationWhenInUsePermission: 'See your pickup point and find available rides.',
+        isAndroidForegroundServiceEnabled: true,
+        isAndroidBackgroundLocationEnabled: true,
       },
     ],
+    'expo-task-manager',
     'expo-notifications',
     [
       'expo-maps',
