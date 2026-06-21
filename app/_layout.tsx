@@ -1,6 +1,7 @@
 import { Stack, Redirect, useSegments, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import * as Notifications from 'expo-notifications';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/lib/auth/store';
 import { hydrateSession } from '@/lib/auth/bootstrap';
 import { QueryProvider } from '@/lib/query/provider';
@@ -8,6 +9,7 @@ import { initI18n } from '@/lib/i18n';
 import { initSentry } from '@/lib/observability/sentry';
 import { initPostHog } from '@/lib/observability/posthog';
 import { registerPushToken } from '@/lib/push/registerPushToken';
+import '@/lib/location/rideShare'; // registers DRIVER_LOCATION_TASK at module scope
 import '../global.css';
 
 function RootLayoutInner() {
@@ -16,6 +18,7 @@ function RootLayoutInner() {
   const firstSegment = segments[0];
   const [i18nReady, setI18nReady] = useState(false);
   const [bootDone, setBootDone] = useState(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     (async () => {
@@ -45,6 +48,18 @@ function RootLayoutInner() {
     return () => sub.remove();
   }, []);
 
+  // Client-side stub: FCM push with type 'new_ride' invalidates the driver feed.
+  // Server-side trigger is wired in the backend phase.
+  useEffect(() => {
+    const sub = Notifications.addNotificationReceivedListener((notification) => {
+      const type = notification.request.content.data?.type;
+      if (type === 'new_ride') {
+        void queryClient.invalidateQueries({ queryKey: ['rides', 'feed'] });
+      }
+    });
+    return () => sub.remove();
+  }, [queryClient]);
+
   if (!i18nReady || !bootDone) return null;
 
   const inProtectedArea = firstSegment === '(rider)' || firstSegment === '(driver)';
@@ -67,6 +82,7 @@ function RootLayoutInner() {
       <Stack.Screen name="(auth)" />
       <Stack.Screen name="(rider)" />
       <Stack.Screen name="(driver)" />
+      <Stack.Screen name="payment-return" />
     </Stack>
   );
 }
