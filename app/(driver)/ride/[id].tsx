@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ import { useDriverBooking } from '@/features/driver/useDriverBooking';
 import { useAcceptBooking } from '@/features/driver/useAcceptBooking';
 import { useCancelBooking } from '@/features/driver/useCancelBooking';
 import { startSharing, stopSharing } from '@/lib/location/rideShare';
+import { useTrackingStore } from '@/lib/stores/useTrackingStore';
 import type { ApiError } from '@/lib/api/client';
 
 export default function RideDetail() {
@@ -23,6 +24,15 @@ export default function RideDetail() {
   const [error, setError] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
 
+  const lastDriverPosition = useTrackingStore((s) => s.lastDriverPosition);
+
+  // stop location task when navigating away while sharing
+  useEffect(() => {
+    return () => {
+      if (sharing) void stopSharing();
+    };
+  }, [sharing]);
+
   async function onAccept() {
     setError(null);
     try {
@@ -30,16 +40,20 @@ export default function RideDetail() {
 
       const shareResult = await startSharing(rideId);
       if (shareResult.status === 'denied') {
-        // Spec §7: cancel the already-accepted ride when location is denied.
         try {
           await cancel.mutateAsync({ bookingId: rideId });
         } catch {
-          // cancel is best-effort here; surface the location error regardless.
+          // best-effort; surface the location error regardless
         }
         setError(t('driver.location_denied'));
         return;
       }
       if (shareResult.status === 'error') {
+        try {
+          await cancel.mutateAsync({ bookingId: rideId });
+        } catch {
+          // best-effort
+        }
         setError(t('driver.live_share_start_failed'));
         return;
       }
@@ -77,21 +91,33 @@ export default function RideDetail() {
 
   const b = booking.data;
 
+  const markers: React.ComponentProps<typeof RideMap>['markers'] = [
+    {
+      id: 'pickup',
+      latitude: b.pickup_lat,
+      longitude: b.pickup_lng,
+      title: t('driver.pickup_label'),
+      tint: '#00b4d8',
+    },
+  ];
+
+  if (lastDriverPosition) {
+    markers.push({
+      id: 'driver',
+      latitude: lastDriverPosition.lat,
+      longitude: lastDriverPosition.lng,
+      title: t('driver.driver_label'),
+      tint: '#f59e0b',
+    });
+  }
+
   return (
     <View className="flex-1 bg-basalt-900">
       <View className="flex-1">
         <RideMap
           testID="ride-map"
           camera={{ latitude: b.pickup_lat, longitude: b.pickup_lng, zoom: 13 }}
-          markers={[
-            {
-              id: 'pickup',
-              latitude: b.pickup_lat,
-              longitude: b.pickup_lng,
-              title: t('driver.pickup_label'),
-              tint: '#00b4d8',
-            },
-          ]}
+          markers={markers}
         />
       </View>
 
