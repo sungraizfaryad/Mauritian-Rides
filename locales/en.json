@@ -105,5 +105,20 @@
   "payment": {
     "upgraded_title": "Plan upgraded",
     "returning": "Returning to your feed"
+  },
+  "account": {
+    "title": "Account",
+    "delete_cta": "Delete account",
+    "delete_confirm_title": "Delete your account?",
+    "delete_confirm_body": "This will permanently delete your account and cancel any active bookings. This cannot be undone.",
+    "delete_confirm_yes": "Yes, delete",
+    "deleting": "Deleting…",
+    "delete_failed": "Could not delete your account. Try again."
+  },
+  "consent": {
+    "title": "Help us improve Mauritian Rides",
+    "body": "We use anonymous analytics to understand how the app is used and fix issues faster. No personal data is sold. You can change this at any time in your account settings.",
+    "accept": "Accept analytics",
+    "decline": "No thanks"
   }
 }

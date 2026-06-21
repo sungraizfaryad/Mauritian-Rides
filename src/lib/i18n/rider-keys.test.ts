@@ -30,4 +30,24 @@ describe('rider i18n', () => {
     expect(flat(en)).toEqual(expect.arrayContaining(requiredDriverKeys));
     expect(flat(fr)).toEqual(expect.arrayContaining(requiredDriverKeys));
   });
+
+  it('includes the account namespace in both EN and FR', () => {
+    const required = [
+      'account.title',
+      'account.delete_cta',
+      'account.delete_confirm_title',
+      'account.delete_confirm_body',
+      'account.delete_confirm_yes',
+      'account.deleting',
+      'account.delete_failed',
+    ];
+    expect(flat(en)).toEqual(expect.arrayContaining(required));
+    expect(flat(fr)).toEqual(expect.arrayContaining(required));
+  });
+
+  it('includes the consent namespace in both EN and FR', () => {
+    const required = ['consent.title', 'consent.body', 'consent.accept', 'consent.decline'];
+    expect(flat(en)).toEqual(expect.arrayContaining(required));
+    expect(flat(fr)).toEqual(expect.arrayContaining(required));
+  });
 });
