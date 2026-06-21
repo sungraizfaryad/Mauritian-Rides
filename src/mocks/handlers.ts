@@ -5,16 +5,20 @@ const BASE = 'https://mauritianrides.com/wp-json/mr/v1';
 export const mockState = { accessTokenValid: true };
 
 export const handlers = [
-  http.post(`${BASE}/auth/token`, async () => {
+  http.post(`${BASE}/auth/token`, async ({ request }) => {
     await delay(50);
+    const body = (await request.json()) as { email?: string };
+    const isDriver = (body.email ?? '').toLowerCase().startsWith('driver');
+    mockState.accessTokenValid = true;
     return HttpResponse.json({
       access_token: 'mock.jwt.access',
       refresh_token: 'mock.refresh',
       expires_in: 900,
-      persona: 'rider',
-      user_id: 1,
-      display_name: 'Test Rider',
+      persona: isDriver ? 'driver' : 'rider',
+      user_id: isDriver ? 2 : 1,
+      display_name: isDriver ? 'Test Driver' : 'Test Rider',
       locale: 'en',
+      plan: isDriver ? 'free' : undefined,
     });
   }),
 
@@ -52,4 +56,19 @@ export const handlers = [
       created_at: new Date().toISOString(),
     });
   }),
+
+  http.post(`${BASE}/drivers/register`, async ({ request }) => {
+    const body = (await request.json()) as { email?: string; persona?: string };
+    return HttpResponse.json({
+      access_token: 'mock.jwt.access',
+      refresh_token: 'mock.refresh',
+      expires_in: 900,
+      persona: body.persona === 'driver' ? 'driver' : 'rider',
+      user_id: 3,
+      display_name: 'New User',
+      locale: 'en',
+    });
+  }),
+
+  http.post(`${BASE}/auth/revoke`, () => new HttpResponse(null, { status: 204 })),
 ];
