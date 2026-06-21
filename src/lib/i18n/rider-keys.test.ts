@@ -15,4 +15,18 @@ describe('rider i18n', () => {
       expect.arrayContaining(['booking.title', 'booking.confirm_cta', 'tracker.title']),
     );
   });
+  it('includes the driver namespace in both EN and FR', () => {
+    const requiredDriverKeys = [
+      'driver.feed_title',
+      'driver.accept_cta',
+      'driver.cap_reached',
+      'driver.race_lost',
+      'driver.docs_title',
+      'driver.plan_title',
+      'driver.upgrade_cta',
+      'driver.live_share_active',
+    ];
+    expect(flat(en)).toEqual(expect.arrayContaining(requiredDriverKeys));
+    expect(flat(fr)).toEqual(expect.arrayContaining(requiredDriverKeys));
+  });
 });
