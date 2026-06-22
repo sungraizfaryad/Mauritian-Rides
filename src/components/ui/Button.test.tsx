@@ -11,6 +11,11 @@ jest.mock('expo-linear-gradient', () => ({
 }));
 
 describe('Button', () => {
+  it('renders its label (primary gradient variant)', () => {
+    render(<Button label="Sign in" onPress={() => {}} variant="primary" />);
+    expect(screen.getByText('Sign in')).toBeTruthy();
+  });
+
   it('renders its label', () => {
     render(<Button label="Book a ride" onPress={() => {}} />);
     expect(screen.getByText('Book a ride')).toBeTruthy();

@@ -64,7 +64,7 @@ export function Button({
           colors={['#ffb24a', '#ff7a54', '#ee5a30']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
-          className="flex-1 flex-row items-center justify-center"
+          style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24 }}
         >
           {inner}
         </LinearGradient>

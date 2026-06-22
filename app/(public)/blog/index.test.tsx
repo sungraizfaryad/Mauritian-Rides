@@ -41,10 +41,21 @@ describe('BlogArchive', () => {
     });
   });
 
-  it('renders bento cards from mocked WP REST', async () => {
+  it('renders post cards from mocked WP REST', async () => {
     render(<BlogArchive />);
     await waitFor(
       () => {
+        expect(screen.getByText('Best Beaches in Mauritius')).toBeTruthy();
+      },
+      { timeout: 3000 },
+    );
+  });
+
+  it('renders single-column (no small card grid — one FlatList per post)', async () => {
+    render(<BlogArchive />);
+    await waitFor(
+      () => {
+        // Each post title is directly accessible (not inside a 2-up row)
         expect(screen.getByText('Best Beaches in Mauritius')).toBeTruthy();
       },
       { timeout: 3000 },

@@ -10,27 +10,19 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
-import { useBlogPosts, type WPPost } from '@/hooks/useBlogPosts';
+import { useBlogPosts, featuredImageUrl, postCategories, type WPPost } from '@/hooks/useBlogPosts';
 import { useBlogCategories } from '@/hooks/useBlogCategories';
-import { BentoRow } from '@/components/blog/BentoRow';
+import { BentoCard } from '@/components/blog/BentoCard';
 import { CategoryChip } from '@/components/blog/CategoryChip';
 import { SkeletonBentoRow } from '@/components/blog/SkeletonCard';
-
-const POSTS_PER_BLOCK = 5;
-
-function chunkPosts(posts: WPPost[], size: number): WPPost[][] {
-  const chunks: WPPost[][] = [];
-  for (let i = 0; i < posts.length; i += size) {
-    chunks.push(posts.slice(i, i + size));
-  }
-  return chunks;
-}
 
 export default function BlogArchive() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const [activeCatId, setActiveCatId] = useState<number | undefined>(undefined);
 
   const { data: catData } = useBlogCategories();
@@ -46,17 +38,21 @@ export default function BlogArchive() {
   } = useBlogPosts(activeCatId);
 
   const allPosts: WPPost[] = data?.pages.flat() ?? [];
-  const blocks = chunkPosts(allPosts, POSTS_PER_BLOCK);
 
   const onRefresh = useCallback(() => {
     refetch();
   }, [refetch]);
 
+  function fmtDate(iso: string) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: '#faf6ee' }}>
       <FlatList
-        data={blocks}
-        keyExtractor={(_, i) => String(i)}
+        data={allPosts}
+        keyExtractor={(post) => String(post.id)}
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
         refreshControl={
           <RefreshControl
@@ -160,9 +156,17 @@ export default function BlogArchive() {
             )}
           </>
         }
-        renderItem={({ item: block, index }) => (
-          <View style={{ paddingHorizontal: 16 }}>
-            <BentoRow posts={block} blockIndex={index} />
+        renderItem={({ item: post, index }) => (
+          <View style={{ paddingHorizontal: 16, marginBottom: 12 }}>
+            <BentoCard
+              title={post.title.rendered.replace(/<[^>]+>/g, '')}
+              category={postCategories(post)[0]?.name}
+              date={fmtDate(post.date)}
+              index={index + 1}
+              imageUrl={featuredImageUrl(post)}
+              size="dominant"
+              onPress={() => router.push(`/(public)/blog/${post.slug}`)}
+            />
           </View>
         )}
         ListFooterComponent={

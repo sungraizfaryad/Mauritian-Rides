@@ -19,7 +19,8 @@ jest.mock('expo-router', () => {
   MockTabs.Screen = MockTabsScreen;
   return {
     Tabs: MockTabs,
-    router: { push: jest.fn(), back: jest.fn() },
+    router: { push: jest.fn(), back: jest.fn(), canGoBack: () => false },
+    useRouter: () => ({ push: jest.fn(), back: jest.fn() }),
     useSegments: () => [],
   };
 });
