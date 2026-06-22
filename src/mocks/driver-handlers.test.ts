@@ -48,8 +48,8 @@ describe('driver MSW handlers', () => {
     expect(body.code).toBe('race_lost');
   });
 
-  it('POST /bookings/:id/cancel returns 200', async () => {
-    const res = await fetch(`${BASE}/bookings/101/cancel`, { method: 'POST' });
+  it('POST /rides/:id/cancel returns 200', async () => {
+    const res = await fetch(`${BASE}/rides/101/cancel`, { method: 'POST' });
     expect(res.status).toBe(200);
   });
 

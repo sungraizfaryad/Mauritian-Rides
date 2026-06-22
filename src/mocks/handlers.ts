@@ -226,7 +226,7 @@ export const handlers = [
     });
   }),
 
-  http.post(`${BASE}/bookings/:id/cancel`, async () => {
+  http.post(`${BASE}/rides/:id/cancel`, async () => {
     await delay(60);
     return HttpResponse.json({ status: 'cancelled' });
   }),

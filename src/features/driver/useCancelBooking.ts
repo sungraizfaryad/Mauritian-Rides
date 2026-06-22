@@ -9,7 +9,7 @@ export function useCancelBooking() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async ({ bookingId }: CancelInput) => {
-      const { data } = await api.post<{ status: string }>(`/bookings/${bookingId}/cancel`);
+      const { data } = await api.post<{ status: string }>(`/rides/${bookingId}/cancel`);
       return data;
     },
     onSuccess: (_data, vars) => {
