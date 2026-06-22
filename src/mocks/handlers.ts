@@ -11,7 +11,7 @@ export const mockAcceptScenario: { mode: '200' | '402' | '409' } = { mode: '200'
 export const mockCapState: { reached: boolean } = { reached: false };
 export const mockDocUploadFail: { fail: boolean } = { fail: false };
 export const mockFeedState: { empty: boolean } = { empty: false };
-export const mockDeleteAccountScenario: { mode: '204' | '500' } = { mode: '204' };
+export const mockDeleteAccountScenario: { mode: '204' | '403' | '500' } = { mode: '204' };
 
 export const handlers = [
   http.post(`${BASE}/auth/token`, async ({ request }) => {
@@ -145,6 +145,12 @@ export const handlers = [
 
   http.delete(`${BASE}/me/account`, async () => {
     await delay(60);
+    if (mockDeleteAccountScenario.mode === '403') {
+      return HttpResponse.json(
+        { code: 'wrong_password', message: 'Current password is incorrect.' },
+        { status: 403 },
+      );
+    }
     if (mockDeleteAccountScenario.mode === '500') {
       return HttpResponse.json(
         { code: 'server_error', message: 'Internal server error.' },
