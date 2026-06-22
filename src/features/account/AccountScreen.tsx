@@ -26,7 +26,7 @@ export function AccountScreen() {
 
   const is403 =
     deleteAccount.isError &&
-    (deleteAccount.error as { response?: { status?: number } })?.response?.status === 403;
+    (deleteAccount.error as { status?: number })?.status === 403;
 
   const errorMsg = is403
     ? t('account.wrong_password')

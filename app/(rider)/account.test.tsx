@@ -51,19 +51,46 @@ describe('AccountScreen', () => {
     expect(mockReplace).not.toHaveBeenCalled();
   });
 
+  it('confirm button is disabled until password is entered', () => {
+    render(<AccountRoute />);
+    fireEvent.press(screen.getByTestId('delete-account-btn'));
+    const btn = screen.getByTestId('delete-confirm-yes-btn');
+    expect(btn.props.accessibilityState?.disabled).toBe(true);
+    fireEvent.changeText(screen.getByTestId('delete-password-input'), 'secret123');
+    expect(btn.props.accessibilityState?.disabled).toBeFalsy();
+  });
+
   it('navigates to (public) after confirmed delete', async () => {
     render(<AccountRoute />);
     fireEvent.press(screen.getByTestId('delete-account-btn'));
+    fireEvent.changeText(screen.getByTestId('delete-password-input'), 'secret123');
     fireEvent.press(screen.getByTestId('delete-confirm-yes-btn'));
     await waitFor(() => expect(mockReplace).toHaveBeenCalledWith('/(public)'));
   });
 
-  it('shows error text when deletion fails', async () => {
+  it('shows generic error text when deletion fails (500)', async () => {
     mockDeleteAccountScenario.mode = '500';
     render(<AccountRoute />);
     fireEvent.press(screen.getByTestId('delete-account-btn'));
+    fireEvent.changeText(screen.getByTestId('delete-password-input'), 'secret123');
     fireEvent.press(screen.getByTestId('delete-confirm-yes-btn'));
     await waitFor(() => expect(screen.getByTestId('delete-error')).toBeTruthy());
+    expect(screen.getByTestId('delete-error').props.children).toBe(
+      'Could not delete your account. Try again.',
+    );
+    expect(mockReplace).not.toHaveBeenCalled();
+  });
+
+  it('shows wrong-password error on 403 and does not navigate', async () => {
+    mockDeleteAccountScenario.mode = '403';
+    render(<AccountRoute />);
+    fireEvent.press(screen.getByTestId('delete-account-btn'));
+    fireEvent.changeText(screen.getByTestId('delete-password-input'), 'wrongpass');
+    fireEvent.press(screen.getByTestId('delete-confirm-yes-btn'));
+    await waitFor(() => expect(screen.getByTestId('delete-error')).toBeTruthy());
+    expect(screen.getByTestId('delete-error').props.children).toBe(
+      'Current password is incorrect.',
+    );
     expect(mockReplace).not.toHaveBeenCalled();
   });
 });
