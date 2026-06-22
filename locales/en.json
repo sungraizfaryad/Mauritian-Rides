@@ -489,5 +489,10 @@
     "privacy_subtitle": "Last updated June 2026",
     "cookie_title": "Cookie Policy",
     "cookie_subtitle": "Last updated June 2026"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty_heading": "No notifications yet",
+    "empty_sub": "We’ll let you know when something comes in."
   }
 }

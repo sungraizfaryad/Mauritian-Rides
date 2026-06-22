@@ -9,7 +9,6 @@ import { PartnerLogosStrip } from '@/components/home/PartnerLogosStrip';
 import { StepCard } from '@/components/home/StepCard';
 import { PerkRow } from '@/components/home/PerkRow';
 import { CTABand } from '@/components/home/CTABand';
-import { PkgPreviewCard } from '@/components/home/PkgPreviewCard';
 import { DecorativeSceneCard } from '@/components/home/DecorativeSceneCard';
 import { FareEstimatorWidget } from '@/components/home/FareEstimatorWidget';
 
@@ -40,7 +39,6 @@ export default function PublicHome() {
   function goBook() { router.push('/(public)/rides/book'); }
   function goDrive() { router.push('/(auth)/register'); }
   function goBlog() { router.push('/(public)/blog'); }
-  function goPackages() { router.push('/(public)/packages'); }
 
   return (
     <View className="flex-1 bg-sand-50">
@@ -66,22 +64,15 @@ export default function PublicHome() {
             {t('public.hero_sub')}
           </Text>
 
-          {/* CTAs */}
-          <View className="flex-row gap-3 mb-6">
+          {/* Single hero CTA — matches website "Book now" */}
+          <View className="mb-6">
             <Pressable
               testID="hero-book-cta"
               onPress={goBook}
-              className="flex-1 rounded-pill py-4 items-center"
+              className="rounded-pill py-4 items-center"
               style={{ backgroundColor: '#fff' }}
             >
               <Text className="font-bold text-lagoon-600">{t('public.hero_cta_book')} →</Text>
-            </Pressable>
-            <Pressable
-              onPress={goDrive}
-              className="flex-1 rounded-pill py-4 items-center border border-white"
-              style={{ backgroundColor: 'transparent' }}
-            >
-              <Text className="font-semibold text-white">{t('public.hero_cta_drive')}</Text>
             </Pressable>
           </View>
 
@@ -223,14 +214,6 @@ export default function PublicHome() {
           >
             <Text className="text-white font-bold">{t('public.driver_cta')} →</Text>
           </Pressable>
-        </View>
-
-        {/* ── Section 6: PKG PREVIEW (driver recruitment) ─────────────── */}
-        <View className="px-5 pb-10 bg-white">
-          <PkgPreviewCard
-            onViewPackages={goPackages}
-            onBecomeDriver={goDrive}
-          />
         </View>
 
         {/* ── Section 7: CTA BAND ──────────────────────────────────────── */}

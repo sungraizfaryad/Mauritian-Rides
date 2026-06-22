@@ -489,5 +489,10 @@
     "privacy_subtitle": "Dernière mise à jour : juin 2026",
     "cookie_title": "Politique de cookies",
     "cookie_subtitle": "Dernière mise à jour : juin 2026"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty_heading": "Aucune notification pour l’instant",
+    "empty_sub": "Nous vous informerons dès qu’il se passera quelque chose."
   }
 }

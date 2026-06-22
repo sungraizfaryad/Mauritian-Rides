@@ -17,7 +17,11 @@ jest.mock('expo-router', () => {
   const MockTabsScreen = () => null;
   const MockTabs = ({ children }: { children: React.ReactNode }) => <>{children}</>;
   MockTabs.Screen = MockTabsScreen;
-  return { Tabs: MockTabs };
+  return {
+    Tabs: MockTabs,
+    router: { push: jest.fn(), back: jest.fn() },
+    useSegments: () => [],
+  };
 });
 
 // Override the global expo-device mock — use isDevice: true so the root check runs.

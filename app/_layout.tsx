@@ -138,6 +138,7 @@ function RootLayoutInner() {
         <Stack.Screen name="(rider)" />
         <Stack.Screen name="(driver)" />
         <Stack.Screen name="payment-return" />
+        <Stack.Screen name="notifications" />
       </Stack>
       {bootDone && showConsent && (
         <ConsentSheet

@@ -56,14 +56,14 @@ describe('PublicHome', () => {
     expect(screen.getByText('Earn on your terms.')).toBeTruthy();
   });
 
-  it('shows the package preview card', () => {
-    render(<PublicHome />);
-    expect(screen.getByText('Start free. Upgrade when you\'re busy.')).toBeTruthy();
-  });
-
   it('shows the CTA band heading', () => {
     render(<PublicHome />);
     expect(screen.getByText('Ready when you are.')).toBeTruthy();
+  });
+
+  it('hero has a single book CTA button (no secondary drive CTA)', () => {
+    render(<PublicHome />);
+    expect(screen.getByTestId('hero-book-cta')).toBeTruthy();
   });
 
   it('shows partner logos strip', () => {
