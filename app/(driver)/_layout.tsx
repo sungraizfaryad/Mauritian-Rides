@@ -34,7 +34,10 @@ export default function DriverLayout() {
       <Tabs.Screen name="plan"     options={{ title: t('driver.plan_title') }} />
       <Tabs.Screen name="docs"     options={{ title: t('driver.docs_title') }} />
       <Tabs.Screen name="account"  options={{ title: t('account.title') }} />
-      <Tabs.Screen name="ride/[id]" options={{ href: null }} />
+      <Tabs.Screen name="ride/[id]"     options={{ href: null }} />
+      <Tabs.Screen name="profile"       options={{ href: null }} />
+      <Tabs.Screen name="messages"      options={{ href: null }} />
+      <Tabs.Screen name="availability"  options={{ href: null }} />
     </Tabs>
   );
 }

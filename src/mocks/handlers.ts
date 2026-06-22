@@ -342,4 +342,47 @@ export const handlers = [
       { status: 201 },
     );
   }),
+
+  http.get(`${BASE}/driver/me/documents`, () =>
+    HttpResponse.json({
+      photo: { slug: 'photo', status: 'missing' },
+      documents: [
+        { slug: 'nid',     status: 'missing' },
+        { slug: 'licence', status: 'missing' },
+        { slug: 'psv',     status: 'missing' },
+      ],
+      driver_status: 'pending',
+      can_submit: false,
+      under_review: false,
+    }),
+  ),
+
+  http.post(`${BASE}/driver/me/submit-for-review`, async () => {
+    await delay(60);
+    return HttpResponse.json({ status: 'under_review' });
+  }),
+
+  http.post(`${BASE}/driver/me/profile`, async ({ request }) => {
+    await delay(60);
+    const body = (await request.json()) as { display_name?: string };
+    return HttpResponse.json({ display_name: body.display_name ?? 'Test Driver' });
+  }),
+
+  http.get(`${BASE}/driver/me/messages`, async () => {
+    await delay(40);
+    return HttpResponse.json([
+      {
+        id: 1,
+        subject: 'Welcome',
+        body: 'Welcome to Mauritian Rides. Complete your documents to start accepting rides.',
+        read: false,
+        created_at: '2026-06-22T08:00:00.000Z',
+      },
+    ]);
+  }),
+
+  http.post(`${BASE}/driver/me/schedule`, async () => {
+    await delay(80);
+    return HttpResponse.json({ saved: true });
+  }),
 ];

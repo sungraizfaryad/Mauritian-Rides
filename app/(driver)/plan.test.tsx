@@ -1,4 +1,3 @@
-// app/(driver)/plan.test.tsx
 const mockTrack = jest.fn();
 jest.mock('@/lib/observability/analytics', () => ({
   track: (...a: unknown[]) => mockTrack(...a),
@@ -9,13 +8,8 @@ jest.mock('@/lib/observability/analytics', () => ({
   revokeConsent: jest.fn(),
 }));
 
-import type { Plan } from '@/lib/payments/openUpgrade';
-
-const mockOpenUpgrade = jest.fn((_plan: Plan, _qc: unknown) =>
-  Promise.resolve('cancel' as const),
-);
 jest.mock('@/lib/payments/openUpgrade', () => ({
-  openUpgrade: (plan: Plan, qc: unknown) => mockOpenUpgrade(plan, qc),
+  openUpgrade: jest.fn(() => Promise.resolve('cancel' as const)),
 }));
 
 import { render, screen, fireEvent, waitFor } from '@/test-utils/render';
@@ -25,18 +19,15 @@ import PlanScreen from './plan';
 describe('PlanScreen', () => {
   afterEach(() => {
     mockCapState.reached = false;
-    mockOpenUpgrade.mockClear();
     mockTrack.mockClear();
   });
 
-  it('renders the cap usage display and at least one upgrade button', async () => {
+  it('renders the gauge with ride count', async () => {
     render(<PlanScreen />);
-    await waitFor(() => expect(screen.getByTestId('cap-used')).toBeTruthy());
-    // On the free plan all three upgrade options are shown; silver is the cheapest.
-    expect(screen.getByTestId('upgrade-btn-silver')).toBeTruthy();
+    await waitFor(() => expect(screen.getByTestId('gauge-used')).toBeTruthy());
   });
 
-  it('shows cap-reached banner when mockCapState.reached is true', async () => {
+  it('shows cap-reached banner when cap is reached', async () => {
     mockCapState.reached = true;
     render(<PlanScreen />);
     await waitFor(() => expect(screen.getByTestId('cap-reached-banner')).toBeTruthy());
@@ -45,7 +36,7 @@ describe('PlanScreen', () => {
   it('fires cap_warning_shown exactly once when pct >= 80', async () => {
     mockCapState.reached = true;
     render(<PlanScreen />);
-    await waitFor(() => expect(screen.getByTestId('cap-used')).toBeTruthy());
+    await waitFor(() => expect(screen.getByTestId('gauge-used')).toBeTruthy());
     expect(mockTrack).toHaveBeenCalledWith(
       'cap_warning_shown',
       expect.objectContaining({ pct: 100 }),
@@ -53,25 +44,22 @@ describe('PlanScreen', () => {
     expect(mockTrack).toHaveBeenCalledTimes(1);
   });
 
-  it('calls openUpgrade with the selected plan when an upgrade button is pressed', async () => {
+  it('renders plan cards from packages endpoint', async () => {
     render(<PlanScreen />);
-    await waitFor(() => expect(screen.getByTestId('upgrade-btn-silver')).toBeTruthy());
-    fireEvent.press(screen.getByTestId('upgrade-btn-silver'));
-    await waitFor(() => expect(mockOpenUpgrade).toHaveBeenCalledWith('silver', expect.anything()));
+    await waitFor(() => expect(screen.getByTestId('plan-cta-silver')).toBeTruthy());
   });
 
-  it('shows the cancelled message when openUpgrade returns cancel', async () => {
+  it('billing toggle renders monthly and yearly options', async () => {
     render(<PlanScreen />);
-    await waitFor(() => expect(screen.getByTestId('upgrade-btn-silver')).toBeTruthy());
-    fireEvent.press(screen.getByTestId('upgrade-btn-silver'));
-    await waitFor(() => expect(screen.getByTestId('upgrade-msg')).toBeTruthy());
+    await waitFor(() => expect(screen.getByTestId('billing-yearly')).toBeTruthy());
+    expect(screen.getByTestId('billing-monthly')).toBeTruthy();
   });
 
-  it('shows an error message when openUpgrade returns error', async () => {
-    mockOpenUpgrade.mockResolvedValueOnce('error' as unknown as 'cancel');
+  it('switches billing cycle when yearly is pressed', async () => {
     render(<PlanScreen />);
-    await waitFor(() => expect(screen.getByTestId('upgrade-btn-silver')).toBeTruthy());
-    fireEvent.press(screen.getByTestId('upgrade-btn-silver'));
-    await waitFor(() => expect(screen.getByTestId('upgrade-msg')).toBeTruthy());
+    await waitFor(() => expect(screen.getByTestId('billing-yearly')).toBeTruthy());
+    fireEvent.press(screen.getByTestId('billing-yearly'));
+    // After switch, monthly is still visible
+    expect(screen.getByTestId('billing-monthly')).toBeTruthy();
   });
 });

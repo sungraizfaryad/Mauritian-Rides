@@ -3,110 +3,107 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { Screen } from '@/components/ui/Screen';
-import { Button } from '@/components/ui/Button';
 import { useCap } from '@/features/driver/useCap';
+import { usePackages } from '@/features/driver/usePackages';
+import { PlanGaugeCard } from '@/components/driver/PlanGaugeCard';
+import { BillingToggle, type BillingCycle } from '@/components/driver/BillingToggle';
+import { PlanCard } from '@/components/driver/PlanCard';
+import { ComparisonTable } from '@/components/driver/ComparisonTable';
+import { FaqAccordion } from '@/components/driver/FaqAccordion';
+import { CapModal } from '@/components/driver/CapModal';
 import { openUpgrade, type Plan } from '@/lib/payments/openUpgrade';
 import { track } from '@/lib/observability/analytics';
-
-const UPGRADE_OPTIONS: { plan: Plan; labelKey: string }[] = [
-  { plan: 'silver', labelKey: 'driver.plan_silver' },
-  { plan: 'gold', labelKey: 'driver.plan_gold' },
-  { plan: 'fleet', labelKey: 'driver.plan_fleet' },
-];
 
 export default function PlanScreen() {
   const { t } = useTranslation();
   const qc = useQueryClient();
-  const { data, isLoading } = useCap();
+  const { data: cap, isLoading: capLoading } = useCap();
+  const { data: packages, isLoading: pkgsLoading } = usePackages();
+  const [billing, setBilling] = useState<BillingCycle>('monthly');
+  const [capModalVisible, setCapModalVisible] = useState(false);
   const [upgrading, setUpgrading] = useState(false);
-  const [upgradeMsg, setUpgradeMsg] = useState<string | null>(null);
   const capWarnFired = useRef(false);
 
-  async function onUpgrade(plan: Plan) {
-    setUpgrading(true);
-    setUpgradeMsg(null);
-    const result = await openUpgrade(plan, qc);
-    setUpgrading(false);
-    if (result === 'cancel') setUpgradeMsg(t('driver.upgrade_cancelled'));
-    if (result === 'error') setUpgradeMsg(t('driver.upgrade_failed'));
-  }
-
-  const pct = data != null && data.limit != null && data.limit > 0 ? Math.round((data.used / data.limit) * 100) : 0;
+  const pct =
+    cap != null && cap.limit != null && cap.limit > 0
+      ? Math.min(100, Math.round((cap.used / cap.limit) * 100))
+      : 0;
 
   useEffect(() => {
-    if (data !== undefined && pct >= 80) {
+    if (cap !== undefined && pct >= 80) {
       if (!capWarnFired.current) {
         capWarnFired.current = true;
-        track('cap_warning_shown', { pct, plan: data.plan });
+        track('cap_warning_shown', { pct, plan: cap.plan });
       }
     } else {
       capWarnFired.current = false;
     }
-  }, [pct, data]);
+  }, [pct, cap]);
 
-  if (isLoading || !data) {
+  async function onChoosePlan(slug: string) {
+    if (slug === 'fleet') return;
+    setUpgrading(true);
+    await openUpgrade(slug as Plan, qc);
+    setUpgrading(false);
+    void qc.invalidateQueries({ queryKey: ['me', 'cap'] });
+  }
+
+  if (capLoading || !cap) {
     return (
-      <Screen testID="plan-screen" contentClassName="items-center justify-center">
+      <Screen dark testID="plan-screen" contentClassName="items-center justify-center">
         <ActivityIndicator color="#2cd4c4" />
       </Screen>
     );
   }
-  // Only show upgrade buttons for plans that are higher than the current one.
-  const orderedPlans: Plan[] = ['silver', 'gold', 'fleet'];
-  const currentRank = orderedPlans.indexOf(data.plan as Plan);
-  const availableUpgrades = UPGRADE_OPTIONS.filter(
-    (o) => currentRank === -1 || orderedPlans.indexOf(o.plan) > currentRank,
-  );
 
   return (
-    <Screen scroll testID="plan-screen">
-      <Text className="mb-6 text-3xl font-bold text-lagoon-400">{t('driver.plan_title')}</Text>
+    <>
+      <Screen dark scroll testID="plan-screen">
+        <PlanGaugeCard cap={cap} />
 
-      {data.cap_reached ? (
-        <View testID="cap-reached-banner" className="mb-4 rounded-md border-l-4 border-l-coral-600 bg-coral-600/20 px-4 py-3">
-          <Text className="font-semibold text-sunset-400">{t('driver.cap_reached')}</Text>
-        </View>
-      ) : null}
-
-      <View className="mb-6 rounded-md border border-basalt-700 bg-basalt-800 p-5">
-        <Text className="mb-1 text-sm text-ink-400">{t('driver.plan_used')}</Text>
-        <Text testID="cap-used" className="mb-3 text-4xl font-bold text-white">
-          {data.used}{' '}
-          {data.limit != null && <Text className="text-2xl text-ink-400">/ {data.limit}</Text>}
-        </Text>
-        <View className="h-2 overflow-hidden rounded-full bg-basalt-700">
+        {cap.cap_reached && (
           <View
-            className="h-2 rounded-full bg-lagoon-400"
-            style={{ width: `${pct}%` }}
-          />
-        </View>
-        <Text className="mt-2 text-xs text-ink-400">
-          {t('driver.plan_resets')}: {new Date(data.reset_at).toLocaleDateString()}
-        </Text>
-      </View>
+            testID="cap-reached-banner"
+            className="mb-5 rounded-xl border-l-4 border-l-coral-500 bg-coral-500/10 px-4 py-3"
+          >
+            <Text className="font-semibold text-coral-400">{t('driver.cap_reached')}</Text>
+            <Text className="mt-1 text-xs text-ink-400">{t('driver.cap_reached_hint')}</Text>
+          </View>
+        )}
 
-      {upgradeMsg ? (
-        <Text testID="upgrade-msg" className="mb-3 text-center text-ink-400">
-          {upgradeMsg}
-        </Text>
-      ) : null}
+        <BillingToggle value={billing} onChange={setBilling} />
 
-      <View className="gap-3">
-        {availableUpgrades.map(({ plan, labelKey }) => (
-          <Button
-            key={plan}
-            testID={`upgrade-btn-${plan}`}
-            label={
-              upgrading
-                ? t('driver.upgrade_opening')
-                : `${t('driver.upgrade_cta')} — ${t(labelKey)}`
-            }
-            loading={upgrading}
-            disabled={upgrading}
-            onPress={() => { void onUpgrade(plan); }}
-          />
-        ))}
-      </View>
-    </Screen>
+        <Text className="mb-3 text-base font-bold text-white">{t('driver.plan_choose_title')}</Text>
+
+        {pkgsLoading ? (
+          <ActivityIndicator color="#2cd4c4" className="my-4" />
+        ) : (
+          packages?.map((pkg) => (
+            <PlanCard
+              key={pkg.slug}
+              pkg={pkg}
+              billingCycle={billing}
+              currentPlan={cap.plan}
+              onChoose={onChoosePlan}
+              upgrading={upgrading}
+            />
+          ))
+        )}
+
+        <ComparisonTable />
+        <FaqAccordion />
+      </Screen>
+
+      <CapModal
+        visible={capModalVisible}
+        onClose={() => setCapModalVisible(false)}
+        packages={packages ?? []}
+        loadingPackages={pkgsLoading}
+        currentPlan={cap.plan}
+        resetAt={cap.reset_at}
+        onUpgrade={onChoosePlan}
+        upgrading={upgrading}
+      />
+    </>
   );
 }
