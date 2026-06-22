@@ -21,6 +21,7 @@ module.exports = {
     // picks up the TypeScript source files, pulling in ESM-only transitive deps.
     '^msw$': '<rootDir>/node_modules/msw/lib/core/index.js',
     '^msw/node$': '<rootDir>/node_modules/msw/lib/node/index.js',
+    '^react-native-webview$': '<rootDir>/src/__mocks__/react-native-webview.ts',
   },
   testPathIgnorePatterns: ['/node_modules/', '/ios/', '/android/', '/dist/', '/.claude/'],
   collectCoverageFrom: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}', '!**/*.d.ts'],

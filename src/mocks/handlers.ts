@@ -1,6 +1,41 @@
 import { http, HttpResponse, delay } from 'msw';
 
 const BASE = 'https://mauritianrides.com/wp-json/mr/v1';
+const WP_BASE = 'http://mauritianrides.local/wp-json/wp/v2';
+
+const mockPosts = [
+  {
+    id: 1,
+    slug: 'best-beaches-mauritius',
+    title: { rendered: 'Best Beaches in Mauritius' },
+    excerpt: { rendered: '<p>A guide to the top beaches on the island.</p>' },
+    content: { rendered: '<h2 id="intro">Introduction</h2><p>Mauritius has stunning beaches.</p>' },
+    date: '2026-06-01T10:00:00',
+    mr_toc: [{ id: 'intro', text: 'Introduction', level: 2 }],
+    _embedded: {
+      'wp:featuredmedia': [{ source_url: 'https://picsum.photos/800/400', media_details: null }],
+      'wp:term': [[{ id: 10, name: 'Travel', slug: 'travel' }], []],
+    },
+  },
+  {
+    id: 2,
+    slug: 'airport-transfers-guide',
+    title: { rendered: 'Airport Transfers: A Complete Guide' },
+    excerpt: { rendered: '<p>Everything you need to know about getting from SSR Airport.</p>' },
+    content: { rendered: '<h2 id="overview">Overview</h2><p>SSR Airport is the main gateway.</p>' },
+    date: '2026-05-15T09:00:00',
+    mr_toc: [{ id: 'overview', text: 'Overview', level: 2 }],
+    _embedded: {
+      'wp:featuredmedia': [{ source_url: 'https://picsum.photos/800/401', media_details: null }],
+      'wp:term': [[{ id: 10, name: 'Travel', slug: 'travel' }], []],
+    },
+  },
+];
+
+const mockCategories = [
+  { id: 10, name: 'Travel', slug: 'travel' },
+  { id: 11, name: 'Tips', slug: 'tips' },
+];
 
 export const mockState = { accessTokenValid: true };
 
@@ -384,5 +419,24 @@ export const handlers = [
   http.post(`${BASE}/driver/me/schedule`, async () => {
     await delay(80);
     return HttpResponse.json({ saved: true });
+  }),
+
+  // WP REST — blog posts
+  http.get(`${WP_BASE}/posts`, async ({ request }) => {
+    await delay(30);
+    const url = new URL(request.url);
+    const slug = url.searchParams.get('slug');
+    const headers = { 'X-WP-Total': '2', 'X-WP-TotalPages': '1' };
+    if (slug) {
+      const match = mockPosts.filter((p) => p.slug === slug);
+      return HttpResponse.json(match, { headers });
+    }
+    return HttpResponse.json(mockPosts, { headers });
+  }),
+
+  // WP REST — categories
+  http.get(`${WP_BASE}/categories`, async () => {
+    await delay(20);
+    return HttpResponse.json(mockCategories);
   }),
 ];

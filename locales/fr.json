@@ -63,7 +63,10 @@
     "cta_heading": "Prêt quand vous l'êtes.",
     "cta_sub": "Que ce soit un trajet aéroport à 2h du matin ou une excursion dominicale à Le Morne — Mauritian Rides vous connecte à un chauffeur en moins d'une minute.",
     "cta_book": "Réserver une course",
-    "cta_drive": "Conduire avec nous"
+    "cta_drive": "Conduire avec nous",
+    "blog_heading": "Blog Voyage à Maurice",
+    "blog_sub": "Itinéraires, astuces et bons plans pour se déplacer sur l'île.",
+    "blog_cta": "Lire le blog"
   },
   "auth": {
     "login_title": "Connexion",
@@ -411,5 +414,24 @@
     "cta_heading": "Prêt à commencer à conduire ?",
     "cta_sub": "Inscrivez-vous une fois, obtenez votre vérification en 48 heures et commencez à recevoir des réservations.",
     "cta_btn": "Devenir chauffeur"
+  },
+  "blog": {
+    "hero_eyebrow": "Guides de voyage · Conseils transport · Maurice",
+    "hero_title": "Blog Voyage à Maurice",
+    "hero_sub": "Itinéraires, astuces et bons plans pour se déplacer sur l'île.",
+    "cat_all": "Tous",
+    "load_more": "Charger plus",
+    "empty_state": "Aucun article trouvé. Revenez bientôt.",
+    "breadcrumb_blog": "Blog",
+    "min_read": "min de lecture",
+    "topics_label": "Thèmes :",
+    "prev_article": "Précédent",
+    "next_article": "Suivant",
+    "related_heading": "Lire aussi",
+    "copied_toast": "Copié !",
+    "post_share_copy": "Copier le lien",
+    "cta_headline": "Prêt à explorer Maurice ?",
+    "cta_sub": "Réservez un chauffeur de confiance en quelques minutes. Sans paiement à l'avance.",
+    "post_book_cta": "Réserver une course"
   }
 }

@@ -63,7 +63,10 @@
     "cta_heading": "Ready when you are.",
     "cta_sub": "Whether it's a 2 a.m. airport run or a Sunday trip to Le Morne — Mauritian Rides connects you to a verified driver in under a minute.",
     "cta_book": "Book a ride",
-    "cta_drive": "Drive with us"
+    "cta_drive": "Drive with us",
+    "blog_heading": "Mauritius Travel Blog",
+    "blog_sub": "Routes, tips, and local knowledge for getting around the island.",
+    "blog_cta": "Read the blog"
   },
   "auth": {
     "login_title": "Sign in",
@@ -411,5 +414,24 @@
     "cta_heading": "Ready to start driving?",
     "cta_sub": "Sign up once, get verified in 48 hours, and start receiving bookings.",
     "cta_btn": "Become a driver"
+  },
+  "blog": {
+    "hero_eyebrow": "Travel guides · Transport tips · Mauritius",
+    "hero_title": "Mauritius Travel Blog",
+    "hero_sub": "Routes, tips, and local knowledge for getting around the island.",
+    "cat_all": "All",
+    "load_more": "Load more",
+    "empty_state": "No articles found. Check back soon.",
+    "breadcrumb_blog": "Blog",
+    "min_read": "min read",
+    "topics_label": "Topics:",
+    "prev_article": "Previous",
+    "next_article": "Next",
+    "related_heading": "Keep Reading",
+    "copied_toast": "Copied!",
+    "post_share_copy": "Copy link",
+    "cta_headline": "Ready to explore Mauritius?",
+    "cta_sub": "Book a trusted driver in minutes. No upfront payment.",
+    "post_book_cta": "Book a ride"
   }
 }

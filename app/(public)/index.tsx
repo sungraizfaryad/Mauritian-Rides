@@ -39,6 +39,7 @@ export default function PublicHome() {
 
   function goBook() { router.push('/(public)/rides/book'); }
   function goDrive() { router.push('/(auth)/register'); }
+  function goBlog() { router.push('/(public)/blog'); }
   function goPackages() { router.push('/(public)/packages'); }
 
   return (
@@ -241,6 +242,51 @@ export default function PublicHome() {
           onBook={goBook}
           onDrive={goDrive}
         />
+
+        {/* ── Blog teaser ──────────────────────────────────────────────── */}
+        <View className="px-5 py-8" style={{ backgroundColor: '#faf6ee' }}>
+          <Text
+            style={{
+              fontSize: 10,
+              fontWeight: '700',
+              letterSpacing: 1.3,
+              textTransform: 'uppercase',
+              color: '#0bb8ad',
+              marginBottom: 6,
+            }}
+          >
+            Travel guides · Tips · Mauritius
+          </Text>
+          <Text
+            style={{
+              fontSize: 22,
+              fontWeight: '700',
+              color: '#0f1720',
+              marginBottom: 6,
+              lineHeight: 28,
+            }}
+          >
+            {t('public.blog_heading', 'Mauritius Travel Blog')}
+          </Text>
+          <Text style={{ fontSize: 14, color: '#4a5a6e', marginBottom: 16, lineHeight: 20 }}>
+            {t('public.blog_sub', 'Routes, tips, and local knowledge for getting around the island.')}
+          </Text>
+          <Pressable
+            onPress={goBlog}
+            style={{
+              alignSelf: 'flex-start',
+              paddingHorizontal: 20,
+              paddingVertical: 10,
+              borderRadius: 999,
+              borderWidth: 1.5,
+              borderColor: '#0bb8ad',
+            }}
+          >
+            <Text style={{ fontSize: 13, fontWeight: '700', color: '#0bb8ad' }}>
+              {t('public.blog_cta', 'Read the blog')} →
+            </Text>
+          </Pressable>
+        </View>
 
         {/* ── Section 8: FOOTER STRIP ──────────────────────────────────── */}
         <View
