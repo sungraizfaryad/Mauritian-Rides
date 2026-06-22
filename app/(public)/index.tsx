@@ -39,6 +39,7 @@ export default function PublicHome() {
 
   function goBook() { router.push('/(public)/rides/book'); }
   function goDrive() { router.push('/(auth)/register'); }
+  function goPackages() { router.push('/(public)/packages'); }
 
   return (
     <View className="flex-1 bg-sand-50">
@@ -226,7 +227,7 @@ export default function PublicHome() {
         {/* ── Section 6: PKG PREVIEW (driver recruitment) ─────────────── */}
         <View className="px-5 pb-10 bg-white">
           <PkgPreviewCard
-            onViewPackages={() => {}}
+            onViewPackages={goPackages}
             onBecomeDriver={goDrive}
           />
         </View>

@@ -402,5 +402,14 @@
     "error_consent_commission": "You must agree to the commission terms.",
     "success_heading": "Welcome to Mauritian Rides",
     "success_sub": "Your driver account is ready. We'll verify your documents before your first ride."
+  },
+  "packages": {
+    "eyebrow": "Driver plans",
+    "hero_heading": "Driver packages.",
+    "hero_sub": "Pick the plan that matches how busy you are. Start free — no card needed. Upgrade any time from your driver dashboard.",
+    "load_error": "Could not load packages. Please try again.",
+    "cta_heading": "Ready to start driving?",
+    "cta_sub": "Sign up once, get verified in 48 hours, and start receiving bookings.",
+    "cta_btn": "Become a driver"
   }
 }

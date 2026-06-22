@@ -402,5 +402,14 @@
     "error_consent_commission": "Vous devez accepter les conditions tarifaires.",
     "success_heading": "Bienvenue sur Mauritian Rides",
     "success_sub": "Votre compte chauffeur est prêt. Nous vérifierons vos documents avant votre première course."
+  },
+  "packages": {
+    "eyebrow": "Forfaits chauffeur",
+    "hero_heading": "Forfaits chauffeur.",
+    "hero_sub": "Choisissez le forfait adapté à votre activité. Commencez gratuitement — sans carte bancaire. Évoluez à tout moment depuis votre tableau de bord.",
+    "load_error": "Impossible de charger les forfaits. Veuillez réessayer.",
+    "cta_heading": "Prêt à commencer à conduire ?",
+    "cta_sub": "Inscrivez-vous une fois, obtenez votre vérification en 48 heures et commencez à recevoir des réservations.",
+    "cta_btn": "Devenir chauffeur"
   }
 }
