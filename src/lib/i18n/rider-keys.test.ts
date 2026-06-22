@@ -77,6 +77,27 @@ describe('rider i18n', () => {
     expect(flat(fr)).toEqual(expect.arrayContaining(required));
   });
 
+  it('includes WP10 account chrome keys in both EN and FR', () => {
+    const required = [
+      'account.logout_cta',
+      'account.logout_confirm',
+      'account.language_label',
+      'account.language_en',
+      'account.language_fr',
+      'account.profile_link',
+      'account.docs_link',
+      'account.messages_link',
+      'account.availability_link',
+      'account.help_link',
+      'account.legal_heading',
+      'account.analytics_label',
+      'account.analytics_on',
+      'account.analytics_off',
+    ];
+    expect(flat(en)).toEqual(expect.arrayContaining(required));
+    expect(flat(fr)).toEqual(expect.arrayContaining(required));
+  });
+
   it('includes the consent namespace in both EN and FR', () => {
     const required = ['consent.title', 'consent.body', 'consent.accept', 'consent.decline'];
     expect(flat(en)).toEqual(expect.arrayContaining(required));
