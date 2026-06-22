@@ -440,4 +440,18 @@ export const handlers = [
     await delay(20);
     return HttpResponse.json(mockCategories);
   }),
+
+  // Contact token
+  http.get('http://mauritianrides.local/wp-admin/admin-ajax.php', ({ request }) => {
+    const url = new URL(request.url);
+    if (url.searchParams.get('action') === 'mr_contact_token') {
+      return HttpResponse.json({ token: 'mock-token-123' });
+    }
+    return HttpResponse.json({}, { status: 400 });
+  }),
+
+  // Contact submit
+  http.post('http://mauritianrides.local/wp-admin/admin-ajax.php', async () => {
+    return HttpResponse.json({ success: true, data: { message: 'Thanks — your message has been sent. We will be in touch shortly.' } });
+  }),
 ];
