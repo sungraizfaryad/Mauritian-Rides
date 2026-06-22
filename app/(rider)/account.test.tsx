@@ -1,5 +1,11 @@
 const mockReplace = jest.fn();
 jest.mock('expo-router', () => ({ router: { replace: (...a: unknown[]) => mockReplace(...a) } }));
+jest.mock('@/lib/locale/localeStore', () => ({
+  localeStore: {
+    get: jest.fn(() => 'en'),
+    set: jest.fn(),
+  },
+}));
 jest.mock('@/lib/observability/analytics', () => ({
   track: jest.fn(),
   identifyUser: jest.fn(),
@@ -92,5 +98,28 @@ describe('AccountScreen', () => {
       'Current password is incorrect.',
     );
     expect(mockReplace).not.toHaveBeenCalled();
+  });
+
+  it('renders the logout button', () => {
+    render(<AccountRoute />);
+    expect(screen.getByTestId('logout-btn')).toBeTruthy();
+  });
+
+  it('renders language toggle buttons', () => {
+    render(<AccountRoute />);
+    expect(screen.getByTestId('lang-en')).toBeTruthy();
+    expect(screen.getByTestId('lang-fr')).toBeTruthy();
+  });
+
+  it('renders analytics toggle', () => {
+    render(<AccountRoute />);
+    expect(screen.getByTestId('analytics-toggle')).toBeTruthy();
+  });
+
+  it('renders legal links', () => {
+    render(<AccountRoute />);
+    expect(screen.getByTestId('link-terms')).toBeTruthy();
+    expect(screen.getByTestId('link-privacy')).toBeTruthy();
+    expect(screen.getByTestId('link-cookie')).toBeTruthy();
   });
 });
