@@ -12,7 +12,11 @@ describe('rider i18n', () => {
   });
   it('includes the booking namespace', () => {
     expect(flat(en)).toEqual(
-      expect.arrayContaining(['booking.title', 'booking.confirm_cta', 'tracker.title']),
+      expect.arrayContaining([
+        'booking.title', 'booking.confirm_cta', 'tracker.title',
+        'booking.step1_title', 'booking.step2_title', 'booking.vehicle_label',
+        'booking.fee_notice_bold', 'booking.success_title',
+      ]),
     );
   });
   it('includes the driver namespace in both EN and FR', () => {

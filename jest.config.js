@@ -22,6 +22,6 @@ module.exports = {
     '^msw$': '<rootDir>/node_modules/msw/lib/core/index.js',
     '^msw/node$': '<rootDir>/node_modules/msw/lib/node/index.js',
   },
-  testPathIgnorePatterns: ['/node_modules/', '/ios/', '/android/', '/dist/'],
+  testPathIgnorePatterns: ['/node_modules/', '/ios/', '/android/', '/dist/', '/.claude/'],
   collectCoverageFrom: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}', '!**/*.d.ts'],
 };

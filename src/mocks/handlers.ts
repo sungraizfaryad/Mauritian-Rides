@@ -54,6 +54,7 @@ export const handlers = [
   }),
 
   http.get(`${BASE}/bookings/:ref`, ({ params }) => {
+    const hasDriver = String(params.ref).includes('MR');
     return HttpResponse.json({
       id: 42,
       ref: params.ref,
@@ -66,15 +67,28 @@ export const handlers = [
       accepted_by: null,
       fare: '1500.00',
       created_at: '2026-06-22T08:00:00.000Z',
+      driver: hasDriver
+        ? { name: 'Test Driver', car: 'Toyota Vios', plate: 'NM 1234', phone: '+23057123456' }
+        : undefined,
     });
   }),
+
+  http.get(`${BASE}/vehicles`, () =>
+    HttpResponse.json({
+      vehicles: [
+        { slug: 'any_sedan', label: 'Any sedan (1–3 passengers)', capacity: 'sedan' },
+        { slug: 'any_van',   label: 'Any van (4–7 passengers)',   capacity: 'van' },
+      ],
+    }),
+  ),
 
   http.post(`${BASE}/bookings`, async ({ request }) => {
     await delay(60);
     const body = (await request.json()) as {
-      pickup?: { label?: string; latitude?: number; longitude?: number };
-      dropoff?: string;
-      passengers?: number;
+      pickup?: { name?: string; lat?: number; lng?: number };
+      dropoff?: { name?: string };
+      rider_name?: string;
+      rider_phone?: string;
     };
     mockBookingSeq += 1;
     const ref = `MR-20260622-${String(mockBookingSeq).padStart(4, '0')}`;
@@ -83,11 +97,11 @@ export const handlers = [
         id: 1000 + mockBookingSeq,
         ref,
         status: 'open',
-        pickup: body.pickup?.label ?? 'Pickup',
-        pickup_lat: body.pickup?.latitude ?? -20.1609,
-        pickup_lng: body.pickup?.longitude ?? 57.5012,
-        dropoff: body.dropoff ?? '',
-        passengers: body.passengers ?? 1,
+        pickup: body.pickup?.name ?? 'Pickup',
+        pickup_lat: body.pickup?.lat ?? -20.1609,
+        pickup_lng: body.pickup?.lng ?? 57.5012,
+        dropoff: body.dropoff?.name ?? '',
+        passengers: 1,
         accepted_by: null,
         fare: '1500.00',
         created_at: '2026-06-22T08:00:00.000Z',

@@ -6,9 +6,19 @@ describe('rider MSW handlers', () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        pickup: { latitude: -20.16, longitude: 57.5, label: 'Port Louis' },
-        dropoff: 'Grand Baie',
-        passengers: 2,
+        pickup: { name: 'Port Louis Waterfront', lat: -20.16, lng: 57.5012 },
+        dropoff: { name: 'Grand Baie', lat: -20.0135, lng: 57.5803 },
+        rider_name: 'Test Rider',
+        rider_phone: '+23057001234',
+        rider_email: '',
+        vehicle: 'sedan',
+        vehicle_preference: 'Any sedan (1–3 passengers)',
+        distance_km: 20,
+        duration_min: 24,
+        fare_mur: 710,
+        notes: '',
+        mr_hp_field: '',
+        mr_form_ts: Math.floor(Date.now() / 1000),
       }),
     });
     expect(res.status).toBe(201);

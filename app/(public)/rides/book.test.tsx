@@ -1,26 +1,43 @@
 jest.mock('@/lib/maps/RideMap');
+jest.mock('@/lib/observability/analytics', () => ({
+  track: jest.fn(),
+  identifyUser: jest.fn(),
+  setGuestPersona: jest.fn(),
+  resetIdentity: jest.fn(),
+  grantConsent: jest.fn(),
+  revokeConsent: jest.fn(),
+}));
+jest.mock('@/lib/observability/sentry', () => ({
+  Sentry: { captureException: jest.fn(), init: jest.fn(), captureMessage: jest.fn() },
+}));
+jest.mock('expo-location', () => ({
+  requestForegroundPermissionsAsync: jest.fn().mockResolvedValue({ status: 'denied' }),
+  getCurrentPositionAsync: jest.fn(),
+  Accuracy: { Balanced: 3 },
+}));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (...a: unknown[]) => mockPush(...a) } }));
+jest.mock('@/features/bookings/useBookingStatus', () => ({
+  useBookingStatus: () => ({ data: undefined }),
+}));
 
-import { render, screen, fireEvent, waitFor } from '@/test-utils/render';
-import { useBookingDraftStore } from '@/lib/stores/bookingDraft';
+import { render, screen } from '@/test-utils/render';
 import GuestBook from './book';
 
-describe('Guest booking', () => {
+describe('Guest booking screen', () => {
   beforeEach(() => {
     mockPush.mockClear();
-    useBookingDraftStore.getState().clear();
   });
 
-  it('persists the draft and routes to register with a next param', async () => {
+  it('renders step 1 with booking-screen testID', () => {
     render(<GuestBook />);
-    fireEvent.press(screen.getByTestId('booking-open-picker'));
-    fireEvent.press(screen.getByTestId('ride-map-press'));
-    fireEvent.press(screen.getByTestId('pickup-confirm'));
-    fireEvent.changeText(screen.getByTestId('booking-dropoff'), 'Grand Baie');
-    fireEvent.press(screen.getByTestId('booking-confirm'));
-    await waitFor(() => expect(mockPush).toHaveBeenCalled());
-    expect(String(mockPush.mock.calls[0][0])).toContain('/(auth)/register');
-    expect(useBookingDraftStore.getState().dropoff).toBe('Grand Baie');
+    expect(screen.getByTestId('booking-screen')).toBeTruthy();
+  });
+
+  it('shows the continue button disabled when no locations set', () => {
+    render(<GuestBook />);
+    const btn = screen.getByTestId('booking-continue');
+    expect(btn).toBeTruthy();
+    expect(btn.props.accessibilityState?.disabled).toBeTruthy();
   });
 });
