@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Linking, Text, View } from 'react-native';
 
 // react-native-webview is a native module that requires a dev client rebuild.
 // We import it lazily so the archive works in Expo Go / before rebuild.
@@ -11,6 +11,7 @@ let WebView: React.ComponentType<{
   style: object;
   originWhitelist: string[];
   onError: () => void;
+  onShouldStartLoadWithRequest: (req: { url: string }) => boolean;
 }> | null = null;
 
 try {
@@ -59,6 +60,7 @@ const INJECTED_CSS = `
   hr { border: none; border-top: 1px solid rgba(10,15,20,0.12); margin: 32px 0; }
 `;
 
+// Only our own script — measures document height and posts it back.
 const HEIGHT_SCRIPT = `
   (function() {
     function postHeight() {
@@ -71,11 +73,49 @@ const HEIGHT_SCRIPT = `
   true;
 `;
 
+// Exported for unit tests only — not part of the public component API.
+// Strip dangerous tags and attributes from WP post HTML before it reaches the WebView.
+// Content is from our own WordPress, but defense-in-depth is cheap and covers
+// any future compromise or accidental plugin injection.
+export function sanitizeHtml(html: string): string {
+  // Remove whole-element dangerous tags (scripts, frames, embeds, objects).
+  let out = html.replace(
+    /<(script|iframe|object|embed|base|form|meta|link)[^>]*>[\s\S]*?<\/\1>/gi,
+    '',
+  );
+  // Also catch self-closing or unclosed variants.
+  out = out.replace(/<(script|iframe|object|embed|base|form|meta|link)(\s[^>]*)?\/?>/gi, '');
+  // Drop all on* event handlers (onclick, onload, onerror, …).
+  out = out.replace(/\s+on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+  // Neutralise javascript: and data: URIs in href/src/action.
+  out = out.replace(
+    /((?:href|src|action)\s*=\s*["']?)(?:javascript|data):[^"'>]*/gi,
+    '$1about:blank',
+  );
+  return out;
+}
+
 function buildHtml(content: string) {
+  const safe = sanitizeHtml(content);
   return `<!DOCTYPE html><html><head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <style>${INJECTED_CSS}</style>
-  </head><body>${content}</body></html>`;
+  </head><body>${safe}</body></html>`;
+}
+
+// Exported for unit tests only.
+// Intercept navigation requests from within the WebView.
+// The initial load is `about:blank` (our html source), which we allow.
+// Any real URL is opened in the system browser; non-http(s) schemes are rejected.
+export function shouldStartLoad(req: { url: string }): boolean {
+  const { url } = req;
+  if (url === 'about:blank') return true;
+  // Reject javascript: and data: URIs outright.
+  if (/^(javascript|data):/i.test(url)) return false;
+  if (/^https?:\/\//i.test(url)) {
+    Linking.openURL(url).catch(() => undefined);
+  }
+  return false;
 }
 
 interface Props {
@@ -132,8 +172,9 @@ export function ArticleWebView({ content }: Props) {
       }}
       injectedJavaScript={HEIGHT_SCRIPT}
       style={{ width: '100%', height }}
-      originWhitelist={['*']}
+      originWhitelist={['about:blank']}
       onError={() => setError(true)}
+      onShouldStartLoadWithRequest={shouldStartLoad}
     />
   );
 }

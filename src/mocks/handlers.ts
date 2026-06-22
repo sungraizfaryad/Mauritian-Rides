@@ -1,7 +1,8 @@
 import { http, HttpResponse, delay } from 'msw';
 
 const BASE = 'https://mauritianrides.com/wp-json/mr/v1';
-const WP_BASE = 'http://mauritianrides.local/wp-json/wp/v2';
+const WP_BASE =
+  process.env.EXPO_PUBLIC_WP_URL ?? 'https://mauritianrides.com/wp-json/wp/v2';
 
 const mockPosts = [
   {

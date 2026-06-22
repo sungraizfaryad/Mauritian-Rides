@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-export const WP_BASE = 'http://mauritianrides.local/wp-json/wp/v2';
+export const WP_BASE =
+  process.env.EXPO_PUBLIC_WP_URL ?? 'https://mauritianrides.com/wp-json/wp/v2';
 
 export interface WPCategory {
   id: number;
