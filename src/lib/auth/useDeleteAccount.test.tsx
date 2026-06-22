@@ -45,7 +45,7 @@ describe('useDeleteAccount', () => {
 
   it('clears session, tokens, and PostHog identity on success', async () => {
     const { result } = renderHook(() => useDeleteAccount(), { wrapper: wrap });
-    act(() => { result.current.mutate(); });
+    act(() => { result.current.mutate('test-pass'); });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(useAuthStore.getState().session).toBeNull();
     expect(getAccessToken()).toBeNull();
@@ -56,7 +56,7 @@ describe('useDeleteAccount', () => {
   it('rejects and leaves session intact on server error', async () => {
     mockDeleteAccountScenario.mode = '500';
     const { result } = renderHook(() => useDeleteAccount(), { wrapper: wrap });
-    act(() => { result.current.mutate(); });
+    act(() => { result.current.mutate('test-pass'); });
     await waitFor(() => expect(result.current.isError).toBe(true));
     expect(useAuthStore.getState().session?.userId).toBe(1);
   });

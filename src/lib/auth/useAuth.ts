@@ -66,12 +66,12 @@ export function useLogout() {
 
 export function useDeleteAccount() {
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async (currentPass: string) => {
       const refreshToken = await getRefreshToken();
       if (refreshToken) {
         await api.post('/auth/revoke', { refresh_token: refreshToken }).catch(() => undefined);
       }
-      await api.delete('/me/account');
+      await api.delete('/me/account', { data: { current_pass: currentPass } });
       clearAccessToken();
       await clearRefreshToken();
       useAuthStore.getState().clearSession();
