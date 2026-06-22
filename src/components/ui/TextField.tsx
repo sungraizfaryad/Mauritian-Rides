@@ -9,12 +9,12 @@ interface TextFieldProps extends Omit<TextInputProps, 'className'> {
 export function TextField({ label, error, testID, ...inputProps }: TextFieldProps) {
   return (
     <View className="mb-4">
-      <Text className="mb-1.5 text-sm font-medium text-basalt-300">{label}</Text>
+      <Text className="mb-1.5 text-sm font-medium text-ink-600">{label}</Text>
       <TextInput
         testID={testID}
-        placeholderTextColor="#666666"
-        className={`h-12 rounded-md border bg-basalt-700 px-4 text-base text-white ${
-          error ? 'border-danger' : 'border-basalt-500'
+        placeholderTextColor="#7d8ea3"
+        className={`h-12 rounded-r-md border bg-sand-50 px-4 text-base text-basalt-950 ${
+          error ? 'border-danger' : 'border-sand-200'
         }`}
         {...inputProps}
       />

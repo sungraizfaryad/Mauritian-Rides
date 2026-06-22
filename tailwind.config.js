@@ -5,27 +5,30 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        basalt: {
-          900: '#1a1a1a',
-          700: '#333333',
-          500: '#666666',
-          300: '#999999',
-        },
-        lagoon: {
-          700: '#0077b6',
-          500: '#00b4d8',
-          300: '#90e0ef',
-          100: '#caf0f8',
-        },
-        amber: { 500: '#f59e0b' },
-        mur: '#1a6b3f',
-        danger: '#ef4444',
+        basalt: { 950: '#0a0f14', 900: '#0f1720', 800: '#182330', 700: '#243243' },
+        ink:    { 600: '#4a5a6e', 400: '#7d8ea3', 300: '#a8b5c4' },
+        sand:   { 50: '#faf6ee', 100: '#f4ecd8', 200: '#e9dcb8' },
+        lagoon: { 900: '#0a4843', 600: '#089890', 500: '#0bb8ad', 400: '#2cd4c4', 200: '#9ee8e0' },
+        coral:  { 600: '#ee5a30', 500: '#ff7a54', 300: '#ffc0a0' },
+        sunset: { 500: '#f89428', 400: '#ffb24a' },
+        reef:   { 500: '#e0395e' },
         surface: '#ffffff',
-        surfaceDim: '#f5f5f5',
+        surfaceDim: '#faf6ee',
+        danger: '#e0395e',
       },
       fontFamily: {
-        // Placeholder — replace with real expo-font family names when brand fonts land.
-        sans: ['System'],
+        display: ['Fraunces_400Regular', 'Fraunces_400Regular_Italic', 'serif'],
+        sans:    ['Manrope_400Regular', 'Manrope_600SemiBold', 'System'],
+        mono:    ['JetBrainsMono_400Regular', 'Menlo', 'monospace'],
+      },
+      borderRadius: {
+        'r-xs': '8px',
+        'r-sm': '10px',
+        'r-md': '16px',
+        'r-lg': '24px',
+        'r-xl': '32px',
+        'r-2xl': '44px',
+        pill: '999px',
       },
     },
   },

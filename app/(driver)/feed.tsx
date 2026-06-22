@@ -13,16 +13,16 @@ function RideCard({ ride }: { ride: OpenRide }) {
     <Pressable
       testID={`feed-card-${ride.id}`}
       onPress={() => router.push(`/(driver)/ride/${ride.id}` as never)}
-      className="rounded-md border border-basalt-500 bg-basalt-700 p-4 active:opacity-80"
+      className="rounded-md border border-basalt-700 bg-basalt-800 p-4 active:opacity-80"
     >
       <View className="flex-row items-center justify-between">
         <Text className="font-semibold text-white">{ride.ref}</Text>
-        <Text className="text-amber-400">Rs {ride.fare}</Text>
+        <Text className="text-sunset-400">Rs {ride.fare}</Text>
       </View>
-      <Text className="mt-1 text-basalt-300">{ride.pickup} → {ride.dropoff}</Text>
+      <Text className="mt-1 text-ink-300">{ride.pickup} → {ride.dropoff}</Text>
       <View className="mt-2 flex-row gap-4">
-        <Text className="text-sm text-basalt-400">{t('driver.passengers_label')}: {ride.passengers}</Text>
-        <Text className="text-sm text-basalt-400">{t('driver.distance_label')}: {ride.distance_km} km</Text>
+        <Text className="text-sm text-ink-400">{t('driver.passengers_label')}: {ride.passengers}</Text>
+        <Text className="text-sm text-ink-400">{t('driver.distance_label')}: {ride.distance_km} km</Text>
       </View>
     </Pressable>
   );
@@ -36,16 +36,16 @@ export default function DriverFeed() {
 
   if (isLoading) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-basalt-900">
-        <ActivityIndicator color="#90e0ef" />
+      <SafeAreaView className="flex-1 items-center justify-center bg-basalt-950">
+        <ActivityIndicator color="#2cd4c4" />
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView edges={['bottom']} className="flex-1 bg-basalt-900">
+    <SafeAreaView edges={['bottom']} className="flex-1 bg-basalt-950">
       <View className="px-6 py-4">
-        <Text className="text-3xl font-bold text-lagoon-300">{t('driver.feed_title')}</Text>
+        <Text className="text-3xl font-bold text-lagoon-400">{t('driver.feed_title')}</Text>
       </View>
       <FlashList
         data={data ?? []}
@@ -59,7 +59,7 @@ export default function DriverFeed() {
         onRefresh={refetch}
         ListEmptyComponent={
           <View className="flex-1 items-center justify-center px-6 py-16">
-            <Text className="text-center text-basalt-400">{t('driver.feed_empty')}</Text>
+            <Text className="text-center text-ink-400">{t('driver.feed_empty')}</Text>
           </View>
         }
       />

@@ -37,7 +37,7 @@ export default function Login() {
 
   return (
     <Screen scroll testID="login-screen" contentClassName="justify-center">
-      <Text className="mb-8 text-3xl font-bold text-lagoon-300">{t('auth.login_title')}</Text>
+      <Text className="mb-8 text-3xl font-bold text-lagoon-500">{t('auth.login_title')}</Text>
 
       <Controller
         control={control}
@@ -82,7 +82,7 @@ export default function Login() {
       />
 
       <Link href="/(auth)/register" asChild>
-        <Text className="mt-6 text-center text-lagoon-500">{t('auth.no_account')}</Text>
+        <Text className="mt-6 text-center text-lagoon-600">{t('auth.no_account')}</Text>
       </Link>
     </Screen>
   );

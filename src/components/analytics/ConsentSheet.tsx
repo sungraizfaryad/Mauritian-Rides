@@ -19,9 +19,9 @@ export function ConsentSheet({ onAccept, onDecline }: ConsentSheetProps) {
   return (
     <Modal visible transparent animationType="slide">
       <View className="flex-1 justify-end bg-black/60">
-        <View testID="consent-sheet" className="rounded-t-2xl bg-basalt-800 px-6 pb-10 pt-6">
+        <View testID="consent-sheet" className="rounded-t-2xl bg-basalt-900 px-6 pb-10 pt-6">
           <Text className="mb-3 text-xl font-bold text-white">{t('consent.title')}</Text>
-          <Text className="mb-6 text-sm leading-5 text-basalt-300">{t('consent.body')}</Text>
+          <Text className="mb-6 text-sm leading-5 text-ink-300">{t('consent.body')}</Text>
           <Button
             testID="consent-accept-btn"
             label={t('consent.accept')}

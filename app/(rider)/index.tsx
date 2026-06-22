@@ -37,9 +37,9 @@ export default function RiderHome() {
 
   return (
     <Screen scroll testID="booking-screen">
-      <Text className="mb-6 text-3xl font-bold text-lagoon-300">{t('booking.title')}</Text>
+      <Text className="mb-6 text-3xl font-bold text-lagoon-500">{t('booking.title')}</Text>
 
-      <Text className="mb-1.5 text-sm font-medium text-basalt-300">{t('booking.pickup_label')}</Text>
+      <Text className="mb-1.5 text-sm font-medium text-ink-600">{t('booking.pickup_label')}</Text>
       <Button
         testID="booking-open-picker"
         variant="ghost"
@@ -57,10 +57,10 @@ export default function RiderHome() {
         onChangeText={setDropoff}
       />
 
-      <Text className="mb-1.5 text-sm font-medium text-basalt-300">{t('booking.passengers_label')}</Text>
+      <Text className="mb-1.5 text-sm font-medium text-ink-600">{t('booking.passengers_label')}</Text>
       <View className="mb-4 flex-row items-center gap-4">
         <Button testID="passengers-dec" variant="ghost" label="−" onPress={() => setPassengers(Math.max(1, passengers - 1))} />
-        <Text testID="passengers-count" className="text-xl text-white">{passengers}</Text>
+        <Text testID="passengers-count" className="text-xl text-basalt-950">{passengers}</Text>
         <Button testID="passengers-inc" variant="ghost" label="+" onPress={() => setPassengers(Math.min(8, passengers + 1))} />
       </View>
 

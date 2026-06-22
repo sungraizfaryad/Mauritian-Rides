@@ -1,4 +1,5 @@
 import { Pressable, Text, ActivityIndicator, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -12,17 +13,17 @@ interface ButtonProps {
   testID?: string;
 }
 
-const container: Record<Variant, string> = {
-  primary: 'bg-amber-500',
+const containerClass: Record<Variant, string> = {
+  primary: '',
   secondary: 'bg-lagoon-500',
-  ghost: 'bg-transparent border border-basalt-500',
+  ghost: 'bg-transparent border border-ink-400/30',
   danger: 'bg-red-700',
 };
 
 const labelColor: Record<Variant, string> = {
-  primary: 'text-basalt-900',
-  secondary: 'text-basalt-900',
-  ghost: 'text-lagoon-300',
+  primary: 'text-white',
+  secondary: 'text-white',
+  ghost: 'text-basalt-950',
   danger: 'text-white',
 };
 
@@ -42,23 +43,46 @@ export function Button({
     onPress();
   }
 
+  const inner = loading ? (
+    <View testID={testID ? `${testID}-spinner` : undefined}>
+      <ActivityIndicator color="#fff" />
+    </View>
+  ) : (
+    <Text className={`text-lg font-semibold ${labelColor[variant]}`}>{label}</Text>
+  );
+
+  if (variant === 'primary') {
+    return (
+      <Pressable
+        testID={testID}
+        accessibilityRole="button"
+        accessibilityState={{ disabled: inactive, busy: loading }}
+        onPress={handlePress}
+        className={`h-14 overflow-hidden rounded-full ${inactive ? 'opacity-50' : 'active:opacity-80'}`}
+      >
+        <LinearGradient
+          colors={['#ffb24a', '#ff7a54', '#ee5a30']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          className="flex-1 flex-row items-center justify-center"
+        >
+          {inner}
+        </LinearGradient>
+      </Pressable>
+    );
+  }
+
   return (
     <Pressable
       testID={testID}
       accessibilityRole="button"
       accessibilityState={{ disabled: inactive, busy: loading }}
       onPress={handlePress}
-      className={`h-14 flex-row items-center justify-center rounded-md px-6 ${container[variant]} ${
+      className={`h-14 flex-row items-center justify-center rounded-r-md px-6 ${containerClass[variant]} ${
         inactive ? 'opacity-50' : 'active:opacity-80'
       }`}
     >
-      {loading ? (
-        <View testID={testID ? `${testID}-spinner` : undefined}>
-          <ActivityIndicator color="#1a1a1a" />
-        </View>
-      ) : (
-        <Text className={`text-lg font-semibold ${labelColor[variant]}`}>{label}</Text>
-      )}
+      {inner}
     </Pressable>
   );
 }

@@ -12,7 +12,7 @@ export default function Trips() {
   if (isLoading) {
     return (
       <Screen testID="trips-screen" contentClassName="items-center justify-center">
-        <ActivityIndicator color="#90e0ef" />
+        <ActivityIndicator color="#2cd4c4" />
       </Screen>
     );
   }
@@ -20,7 +20,7 @@ export default function Trips() {
   if (!data || data.length === 0) {
     return (
       <Screen testID="trips-screen" contentClassName="items-center justify-center">
-        <Text className="mb-6 text-center text-basalt-300">{t('trips.empty')}</Text>
+        <Text className="mb-6 text-center text-ink-400">{t('trips.empty')}</Text>
         <Button label={t('trips.book_cta')} onPress={() => router.push('/(rider)')} />
       </Screen>
     );
@@ -28,7 +28,7 @@ export default function Trips() {
 
   return (
     <Screen testID="trips-screen">
-      <Text className="mb-4 text-3xl font-bold text-lagoon-300">{t('trips.title')}</Text>
+      <Text className="mb-4 text-3xl font-bold text-lagoon-500">{t('trips.title')}</Text>
       <FlatList
         data={data}
         keyExtractor={(b) => b.ref}
@@ -37,13 +37,13 @@ export default function Trips() {
           <Pressable
             testID={`trip-${item.ref}`}
             onPress={() => router.push(`/(rider)/bookings/${item.ref}`)}
-            className="rounded-md border border-basalt-500 bg-basalt-700 p-4 active:opacity-80"
+            className="rounded-md border border-sand-200 bg-surface p-4 active:opacity-80"
           >
-            <Text className="font-semibold text-white">{item.ref}</Text>
-            <Text className="text-basalt-300">
+            <Text className="font-semibold text-basalt-950">{item.ref}</Text>
+            <Text className="text-ink-400">
               {item.pickup} → {item.dropoff}
             </Text>
-            <Text className="mt-1 text-sm text-lagoon-300">{t(`tracker.status_${item.status}`)}</Text>
+            <Text className="mt-1 text-sm text-lagoon-600">{t(`tracker.status_${item.status}`)}</Text>
           </Pressable>
         )}
       />

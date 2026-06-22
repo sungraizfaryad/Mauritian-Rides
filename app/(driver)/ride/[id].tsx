@@ -103,8 +103,8 @@ export default function RideDetail() {
 
   if (booking.isLoading || !booking.data) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-basalt-900">
-        <ActivityIndicator color="#90e0ef" />
+      <SafeAreaView className="flex-1 items-center justify-center bg-basalt-950">
+        <ActivityIndicator color="#2cd4c4" />
       </SafeAreaView>
     );
   }
@@ -117,7 +117,7 @@ export default function RideDetail() {
       latitude: b.pickup_lat,
       longitude: b.pickup_lng,
       title: t('driver.pickup_label'),
-      tint: '#00b4d8',
+      tint: '#0bb8ad',
     },
   ];
 
@@ -127,12 +127,12 @@ export default function RideDetail() {
       latitude: lastDriverPosition.lat,
       longitude: lastDriverPosition.lng,
       title: t('driver.driver_label'),
-      tint: '#f59e0b',
+      tint: '#ffb24a',
     });
   }
 
   return (
-    <View className="flex-1 bg-basalt-900">
+    <View className="flex-1 bg-basalt-950">
       <View className="flex-1">
         <RideMap
           testID="ride-map"
@@ -141,23 +141,23 @@ export default function RideDetail() {
         />
       </View>
 
-      <SafeAreaView edges={['bottom']} className="bg-basalt-900">
+      <SafeAreaView edges={['bottom']} className="bg-basalt-950">
         <View className="gap-3 px-6 py-4">
           {sharing ? (
             <View testID="live-share-banner" className="rounded-md bg-lagoon-900 px-4 py-2">
-              <Text className="text-center text-sm text-lagoon-300">
+              <Text className="text-center text-sm text-lagoon-400">
                 {t('driver.live_share_active')}
               </Text>
             </View>
           ) : null}
 
           <Text className="text-xl font-bold text-white">{b.ref}</Text>
-          <Text className="text-basalt-300">{b.pickup} → {b.dropoff}</Text>
+          <Text className="text-ink-300">{b.pickup} → {b.dropoff}</Text>
           <View className="flex-row gap-4">
-            <Text className="text-sm text-basalt-400">
+            <Text className="text-sm text-ink-400">
               {t('driver.fare_label')}: Rs {b.fare}
             </Text>
-            <Text className="text-sm text-basalt-400">
+            <Text className="text-sm text-ink-400">
               {t('driver.passengers_label')}: {b.passengers}
             </Text>
           </View>

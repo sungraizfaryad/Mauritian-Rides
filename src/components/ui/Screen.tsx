@@ -8,9 +8,11 @@ interface ScreenProps {
   testID?: string;
   /** Extra Tailwind classes for the inner content container. */
   contentClassName?: string;
+  /** Force dark navy background (driver screens). Default is sand-50. */
+  dark?: boolean;
 }
 
-export function Screen({ children, scroll = false, testID, contentClassName = '' }: ScreenProps) {
+export function Screen({ children, scroll = false, testID, contentClassName = '', dark = false }: ScreenProps) {
   const inner = scroll ? (
     <ScrollView
       testID={testID}
@@ -26,5 +28,9 @@ export function Screen({ children, scroll = false, testID, contentClassName = ''
     </View>
   );
 
-  return <SafeAreaView className="flex-1 bg-basalt-900">{inner}</SafeAreaView>;
+  return (
+    <SafeAreaView className={`flex-1 ${dark ? 'bg-basalt-950' : 'bg-sand-50'}`}>
+      {inner}
+    </SafeAreaView>
+  );
 }

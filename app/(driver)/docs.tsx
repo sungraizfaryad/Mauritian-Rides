@@ -45,19 +45,19 @@ export default function DocUpload() {
 
   return (
     <Screen scroll testID="docs-screen">
-      <Text className="mb-6 text-3xl font-bold text-lagoon-300">{t('driver.docs_title')}</Text>
+      <Text className="mb-6 text-3xl font-bold text-lagoon-400">{t('driver.docs_title')}</Text>
 
       <View className="gap-5">
         {SLOTS.map(({ slug, labelKey }) => {
           const st = statuses[slug];
           const busy = uploading[slug] ?? false;
           return (
-            <View key={slug} className="rounded-md border border-basalt-500 bg-basalt-700 p-4">
+            <View key={slug} className="rounded-md border border-basalt-700 bg-basalt-800 p-4">
               <Text className="mb-2 font-semibold text-white">{t(labelKey)}</Text>
               {st ? (
                 <Text
                   testID={`status-${slug}`}
-                  className={st.status === 'error' ? 'text-danger' : 'text-lagoon-300'}
+                  className={st.status === 'error' ? 'text-danger' : 'text-lagoon-400'}
                 >
                   {st.status === 'error'
                     ? (st.error ?? t('driver.docs_upload_failed'))

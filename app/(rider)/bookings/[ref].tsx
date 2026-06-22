@@ -17,15 +17,15 @@ export default function Tracker() {
 
   if (booking.isLoading || !booking.data) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-basalt-900">
-        <ActivityIndicator color="#90e0ef" />
+      <SafeAreaView className="flex-1 items-center justify-center bg-basalt-950">
+        <ActivityIndicator color="#2cd4c4" />
       </SafeAreaView>
     );
   }
 
   const b = booking.data;
   const markers: RideMarker[] = [
-    { id: 'pickup', latitude: b.pickup_lat, longitude: b.pickup_lng, title: t('tracker.pickup_pin'), tint: '#00b4d8' },
+    { id: 'pickup', latitude: b.pickup_lat, longitude: b.pickup_lng, title: t('tracker.pickup_pin'), tint: '#0bb8ad' },
   ];
   if (driver.data) {
     markers.push({
@@ -33,7 +33,7 @@ export default function Tracker() {
       latitude: driver.data.latitude,
       longitude: driver.data.longitude,
       title: t('tracker.driver_pin'),
-      tint: '#f59e0b',
+      tint: '#ffb24a',
     });
   }
 
@@ -42,20 +42,20 @@ export default function Tracker() {
     : { latitude: b.pickup_lat, longitude: b.pickup_lng, zoom: 13 };
 
   return (
-    <View className="flex-1 bg-basalt-900">
+    <View className="flex-1 bg-basalt-950">
       <View className="flex-1">
         <RideMap testID="tracker-map" camera={camera} markers={markers} />
       </View>
-      <SafeAreaView edges={['bottom']} className="bg-basalt-900">
+      <SafeAreaView edges={['bottom']} className="bg-basalt-950">
         <View testID="tracker-status" className="gap-1 px-6 py-4">
-          <Text className="text-lg font-semibold text-lagoon-300">{t(`tracker.status_${status}`)}</Text>
-          <Text className="text-basalt-300">
+          <Text className="text-lg font-semibold text-lagoon-400">{t(`tracker.status_${status}`)}</Text>
+          <Text className="text-ink-300">
             {b.pickup} → {b.dropoff}
           </Text>
-          <Text className="text-basalt-300">
+          <Text className="text-ink-300">
             {t('tracker.fare')}: Rs {b.fare}
           </Text>
-          {isAccepted && !driver.data ? <Text className="text-basalt-500">{t('tracker.waiting_location')}</Text> : null}
+          {isAccepted && !driver.data ? <Text className="text-ink-400">{t('tracker.waiting_location')}</Text> : null}
         </View>
       </SafeAreaView>
     </View>

@@ -6,6 +6,10 @@ jest.mock('expo-haptics', () => ({
   ImpactFeedbackStyle: { Light: 'light', Medium: 'medium' },
 }));
 
+jest.mock('expo-linear-gradient', () => ({
+  LinearGradient: ({ children }: { children: React.ReactNode }) => children,
+}));
+
 describe('Button', () => {
   it('renders its label', () => {
     render(<Button label="Book a ride" onPress={() => {}} />);

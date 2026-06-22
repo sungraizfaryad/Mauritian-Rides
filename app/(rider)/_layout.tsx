@@ -7,9 +7,9 @@ export default function RiderLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#90e0ef',
-        tabBarInactiveTintColor: '#666666',
-        tabBarStyle: { backgroundColor: '#1a1a1a', borderTopColor: '#333333' },
+        tabBarActiveTintColor: '#0bb8ad',
+        tabBarInactiveTintColor: '#7d8ea3',
+        tabBarStyle: { backgroundColor: '#0a0f14', borderTopColor: '#243243' },
       }}
     >
       <Tabs.Screen name="index" options={{ title: t('booking.title') }} />

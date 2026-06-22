@@ -2,6 +2,18 @@ import { Stack, Redirect, useSegments, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Linking } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font';
+import {
+  Fraunces_400Regular,
+  Fraunces_400Regular_Italic,
+  Fraunces_700Bold,
+} from '@expo-google-fonts/fraunces';
+import {
+  Manrope_400Regular,
+  Manrope_600SemiBold,
+  Manrope_700Bold,
+} from '@expo-google-fonts/manrope';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/lib/auth/store';
 import { hydrateSession } from '@/lib/auth/bootstrap';
@@ -16,6 +28,8 @@ import { track, setGuestPersona } from '@/lib/observability/analytics';
 import '@/lib/location/rideShare'; // registers DRIVER_LOCATION_TASK at module scope
 import '../global.css';
 
+SplashScreen.preventAutoHideAsync();
+
 function RootLayoutInner() {
   const session = useAuthStore((s) => s.session);
   const segments = useSegments();
@@ -24,6 +38,15 @@ function RootLayoutInner() {
   const [bootDone, setBootDone] = useState(false);
   const [showConsent, setShowConsent] = useState(() => !consentStore.hasShown());
   const queryClient = useQueryClient();
+
+  const [fontsLoaded] = useFonts({
+    Fraunces_400Regular,
+    Fraunces_400Regular_Italic,
+    Fraunces_700Bold,
+    Manrope_400Regular,
+    Manrope_600SemiBold,
+    Manrope_700Bold,
+  });
 
   useEffect(() => {
     (async () => {
@@ -85,7 +108,13 @@ function RootLayoutInner() {
     return () => sub.remove();
   }, [queryClient]);
 
-  if (!i18nReady || !bootDone) return null;
+  useEffect(() => {
+    if (fontsLoaded && bootDone && i18nReady) {
+      void SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, bootDone, i18nReady]);
+
+  if (!i18nReady || !bootDone || !fontsLoaded) return null;
 
   const inProtectedArea = firstSegment === '(rider)' || firstSegment === '(driver)';
 

@@ -42,9 +42,9 @@ export default function Register() {
 
   return (
     <Screen scroll testID="register-screen" contentClassName="justify-center">
-      <Text className="mb-6 text-3xl font-bold text-lagoon-300">{t('auth.register_title')}</Text>
+      <Text className="mb-6 text-3xl font-bold text-lagoon-500">{t('auth.register_title')}</Text>
 
-      <Text className="mb-2 text-sm font-medium text-basalt-300">{t('auth.role_question')}</Text>
+      <Text className="mb-2 text-sm font-medium text-ink-600">{t('auth.role_question')}</Text>
       <View className="mb-5 flex-row gap-3">
         {(['rider', 'driver'] as const).map((role) => (
           <Pressable
@@ -52,10 +52,10 @@ export default function Register() {
             testID={`role-${role}`}
             onPress={() => selectRole(role)}
             className={`flex-1 items-center rounded-md border px-4 py-4 ${
-              persona === role ? 'border-amber-500 bg-basalt-700' : 'border-basalt-500'
+              persona === role ? 'border-lagoon-500 bg-basalt-800' : 'border-sand-200'
             }`}
           >
-            <Text className={persona === role ? 'font-semibold text-amber-500' : 'text-basalt-300'}>
+            <Text className={persona === role ? 'font-semibold text-lagoon-400' : 'text-ink-400'}>
               {role === 'rider' ? t('auth.role_rider') : t('auth.role_driver')}
             </Text>
           </Pressable>
@@ -118,7 +118,7 @@ export default function Register() {
       />
 
       <Link href="/(auth)/login" asChild>
-        <Text className="mt-6 text-center text-lagoon-500">{t('auth.have_account')}</Text>
+        <Text className="mt-6 text-center text-lagoon-600">{t('auth.have_account')}</Text>
       </Link>
     </Screen>
   );

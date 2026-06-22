@@ -27,17 +27,17 @@ export default function PaymentReturn() {
   const success = status === 'success';
 
   return (
-    <SafeAreaView className="flex-1 bg-basalt-900">
+    <SafeAreaView className="flex-1 bg-basalt-950">
       <View testID="payment-return-screen" className="flex-1 items-center justify-center">
         {success ? (
           <View className="items-center gap-3 px-8">
-            <Text className="text-center text-xl font-bold text-lagoon-300">{t('payment.upgraded_title')}</Text>
-            <Text className="text-center text-basalt-400">{t('payment.returning')}</Text>
+            <Text className="text-center text-xl font-bold text-lagoon-400">{t('payment.upgraded_title')}</Text>
+            <Text className="text-center text-ink-400">{t('payment.returning')}</Text>
           </View>
         ) : (
           <View className="items-center gap-3 px-8">
-            <ActivityIndicator color="#90e0ef" />
-            <Text className="text-center text-basalt-400">{t('payment.returning')}</Text>
+            <ActivityIndicator color="#2cd4c4" />
+            <Text className="text-center text-ink-400">{t('payment.returning')}</Text>
           </View>
         )}
       </View>

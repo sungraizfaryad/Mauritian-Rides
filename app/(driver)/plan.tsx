@@ -47,7 +47,7 @@ export default function PlanScreen() {
   if (isLoading || !data) {
     return (
       <Screen testID="plan-screen" contentClassName="items-center justify-center">
-        <ActivityIndicator color="#90e0ef" />
+        <ActivityIndicator color="#2cd4c4" />
       </Screen>
     );
   }
@@ -60,33 +60,33 @@ export default function PlanScreen() {
 
   return (
     <Screen scroll testID="plan-screen">
-      <Text className="mb-6 text-3xl font-bold text-lagoon-300">{t('driver.plan_title')}</Text>
+      <Text className="mb-6 text-3xl font-bold text-lagoon-400">{t('driver.plan_title')}</Text>
 
       {data.reached ? (
-        <View testID="cap-reached-banner" className="mb-4 rounded-md bg-amber-900 px-4 py-3">
-          <Text className="font-semibold text-amber-300">{t('driver.cap_reached')}</Text>
+        <View testID="cap-reached-banner" className="mb-4 rounded-md border-l-4 border-l-coral-600 bg-coral-600/20 px-4 py-3">
+          <Text className="font-semibold text-sunset-400">{t('driver.cap_reached')}</Text>
         </View>
       ) : null}
 
-      <View className="mb-6 rounded-md border border-basalt-500 bg-basalt-700 p-5">
-        <Text className="mb-1 text-sm text-basalt-400">{t('driver.plan_used')}</Text>
+      <View className="mb-6 rounded-md border border-basalt-700 bg-basalt-800 p-5">
+        <Text className="mb-1 text-sm text-ink-400">{t('driver.plan_used')}</Text>
         <Text testID="cap-used" className="mb-3 text-4xl font-bold text-white">
           {data.used}{' '}
-          <Text className="text-2xl text-basalt-400">/ {data.limit}</Text>
+          <Text className="text-2xl text-ink-400">/ {data.limit}</Text>
         </Text>
-        <View className="h-2 overflow-hidden rounded-full bg-basalt-600">
+        <View className="h-2 overflow-hidden rounded-full bg-basalt-700">
           <View
-            className={`h-2 rounded-full ${pct >= 90 ? 'bg-amber-500' : 'bg-lagoon-400'}`}
+            className="h-2 rounded-full bg-lagoon-400"
             style={{ width: `${pct}%` }}
           />
         </View>
-        <Text className="mt-2 text-xs text-basalt-500">
+        <Text className="mt-2 text-xs text-ink-400">
           {t('driver.plan_resets')}: {new Date(data.reset_at).toLocaleDateString()}
         </Text>
       </View>
 
       {upgradeMsg ? (
-        <Text testID="upgrade-msg" className="mb-3 text-center text-basalt-400">
+        <Text testID="upgrade-msg" className="mb-3 text-center text-ink-400">
           {upgradeMsg}
         </Text>
       ) : null}

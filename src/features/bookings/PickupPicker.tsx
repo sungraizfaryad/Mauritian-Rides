@@ -37,14 +37,14 @@ export function PickupPicker({ onConfirm, onCancel }: PickupPickerProps) {
   }
 
   return (
-    <View className="flex-1 bg-basalt-900">
+    <View className="flex-1 bg-basalt-950">
       <View className="flex-1">
         <RideMap
           testID="pickup-map"
           camera={pickup ? { ...pickup, zoom: 14 } : MAURITIUS}
           markers={
             pickup
-              ? [{ id: 'pickup', latitude: pickup.latitude, longitude: pickup.longitude, title: t('booking.pickup_label'), tint: '#00b4d8' }]
+              ? [{ id: 'pickup', latitude: pickup.latitude, longitude: pickup.longitude, title: t('booking.pickup_label'), tint: '#0bb8ad' }]
               : []
           }
           onPress={onMapPress}
@@ -54,7 +54,7 @@ export function PickupPicker({ onConfirm, onCancel }: PickupPickerProps) {
       <View className="gap-3 px-6 py-4">
         {denied ? <Text className="text-danger">{t('booking.location_denied')}</Text> : null}
         {pickup ? (
-          <Text className="text-basalt-300" numberOfLines={1}>
+          <Text className="text-ink-300" numberOfLines={1}>
             {pickup.label}
           </Text>
         ) : null}

@@ -36,12 +36,12 @@ export function AccountScreen() {
 
   return (
     <Screen scroll testID="account-screen">
-      <Text className="mb-2 text-3xl font-bold text-lagoon-300">{t('account.title')}</Text>
+      <Text className="mb-2 text-3xl font-bold text-lagoon-500">{t('account.title')}</Text>
       {session ? (
-        <Text className="mb-6 text-basalt-300">{session.displayName}</Text>
+        <Text className="mb-6 text-ink-400">{session.displayName}</Text>
       ) : null}
 
-      <View className="mt-8 border-t border-basalt-600 pt-6">
+      <View className="mt-8 border-t border-sand-200 pt-6">
         {!confirming ? (
           <Button
             testID="delete-account-btn"
@@ -51,10 +51,10 @@ export function AccountScreen() {
           />
         ) : (
           <View testID="delete-confirm-view" className="gap-4">
-            <Text className="text-base font-semibold text-white">
+            <Text className="text-base font-semibold text-basalt-950">
               {t('account.delete_confirm_title')}
             </Text>
-            <Text className="text-sm text-basalt-300">{t('account.delete_confirm_body')}</Text>
+            <Text className="text-sm text-ink-400">{t('account.delete_confirm_body')}</Text>
             <TextField
               testID="delete-password-input"
               label={t('account.password_label')}
