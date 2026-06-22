@@ -7,6 +7,9 @@ jest.mock('@/lib/observability/analytics', () => ({
   grantConsent: jest.fn(),
   revokeConsent: jest.fn(),
 }));
+jest.mock('@/lib/observability/sentry', () => ({
+  Sentry: { captureException: jest.fn(), captureMessage: jest.fn(), init: jest.fn() },
+}));
 
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
@@ -22,24 +25,34 @@ describe('DriverFeed', () => {
     mockPush.mockClear();
     mockTrack.mockClear();
     mockFeedState.empty = false;
+    mockFeedState.driverStatus = 'active';
   });
-  afterEach(() => { mockFeedState.empty = false; });
+  afterEach(() => {
+    mockFeedState.empty = false;
+    mockFeedState.driverStatus = 'active';
+  });
 
-  it('renders the feed title and a list of open rides', async () => {
+  it('renders the greeting card and open ride rows', async () => {
     render(<DriverFeed />);
-    await waitFor(() => expect(screen.getByTestId('feed-card-101')).toBeTruthy());
-    expect(screen.getByTestId('feed-card-102')).toBeTruthy();
+    await waitFor(() => expect(screen.getByTestId('feed-row-101')).toBeTruthy());
+    expect(screen.getByTestId('feed-row-102')).toBeTruthy();
     expect(mockTrack).toHaveBeenCalledWith('ride_feed_viewed');
   });
 
-  it('navigates to the ride detail screen on card tap', async () => {
+  it('shows StatusBanner when driver_status is pending', async () => {
+    mockFeedState.driverStatus = 'pending';
     render(<DriverFeed />);
-    await waitFor(() => expect(screen.getByTestId('feed-card-101')).toBeTruthy());
-    fireEvent.press(screen.getByTestId('feed-card-101'));
-    expect(mockPush).toHaveBeenCalledWith('/(driver)/ride/101');
+    await waitFor(() => expect(screen.getByTestId('status-banner-pending')).toBeTruthy());
   });
 
-  it('shows the empty state when feed returns no rides', async () => {
+  it('removes a row when Pass is pressed', async () => {
+    render(<DriverFeed />);
+    await waitFor(() => expect(screen.getByTestId('feed-row-101')).toBeTruthy());
+    fireEvent.press(screen.getByTestId('feed-pass-101'));
+    await waitFor(() => expect(screen.queryByTestId('feed-row-101')).toBeNull());
+  });
+
+  it('shows empty state when feed returns no rides', async () => {
     mockFeedState.empty = true;
     render(<DriverFeed />);
     await waitFor(() =>

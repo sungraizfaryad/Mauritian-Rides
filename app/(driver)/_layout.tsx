@@ -8,7 +8,7 @@ export default function DriverLayout() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (!Device.isDevice) return; // skip emulator/simulator
+    if (!Device.isDevice) return;
     Device.isRootedExperimentalAsync()
       .then((rooted) => {
         if (rooted) {
@@ -28,10 +28,12 @@ export default function DriverLayout() {
         tabBarStyle: { backgroundColor: '#0a0f14', borderTopColor: '#243243' },
       }}
     >
-      <Tabs.Screen name="feed" options={{ title: t('driver.feed_title') }} />
-      <Tabs.Screen name="plan" options={{ title: t('driver.plan_title') }} />
-      <Tabs.Screen name="docs" options={{ title: t('driver.docs_title') }} />
-      <Tabs.Screen name="account" options={{ title: t('account.title') }} />
+      <Tabs.Screen name="feed"     options={{ title: t('driver.feed_title') }} />
+      <Tabs.Screen name="history"  options={{ title: t('driver.history_tab') }} />
+      <Tabs.Screen name="earnings" options={{ title: t('driver.earnings_tab') }} />
+      <Tabs.Screen name="plan"     options={{ title: t('driver.plan_title') }} />
+      <Tabs.Screen name="docs"     options={{ title: t('driver.docs_title') }} />
+      <Tabs.Screen name="account"  options={{ title: t('account.title') }} />
       <Tabs.Screen name="ride/[id]" options={{ href: null }} />
     </Tabs>
   );

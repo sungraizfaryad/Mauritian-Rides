@@ -4,8 +4,8 @@ import { api } from '@/lib/api/client';
 export interface DriverCap {
   plan: 'free' | 'silver' | 'gold' | 'fleet';
   used: number;
-  limit: number;
-  reached: boolean;
+  limit: number | null;
+  cap_reached: boolean;
   reset_at: string;
 }
 

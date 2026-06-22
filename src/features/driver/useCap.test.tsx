@@ -12,17 +12,17 @@ function wrap({ children }: { children: ReactNode }) {
 describe('useCap', () => {
   afterEach(() => { mockCapState.reached = false; });
 
-  it('returns cap info with reached:false by default', async () => {
+  it('returns cap info with cap_reached:false by default', async () => {
     const { result } = renderHook(() => useCap(), { wrapper: wrap });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data?.reached).toBe(false);
+    expect(result.current.data?.cap_reached).toBe(false);
     expect(typeof result.current.data?.used).toBe('number');
   });
 
-  it('returns reached:true when mockCapState.reached is set', async () => {
+  it('returns cap_reached:true when mockCapState.reached is set', async () => {
     mockCapState.reached = true;
     const { result } = renderHook(() => useCap(), { wrapper: wrap });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data?.reached).toBe(true);
+    expect(result.current.data?.cap_reached).toBe(true);
   });
 });

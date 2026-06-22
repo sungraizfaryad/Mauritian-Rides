@@ -6,6 +6,16 @@ import { Sentry } from '@/lib/observability/sentry';
 interface AcceptInput { bookingId: number }
 interface AcceptResponse { id: number; status: string; accepted_by: number; accepted_at: string }
 
+export type AcceptError = 'cap_reached' | 'docs_required' | 'race_lost' | 'generic';
+
+export function parseAcceptError(err: unknown): AcceptError {
+  const ae = err as { status?: number; code?: string };
+  if (ae.status === 402 || ae.code === 'cap_reached') return 'cap_reached';
+  if (ae.status === 403 && ae.code === 'mr_docs_required') return 'docs_required';
+  if (ae.code === 'race_lost') return 'race_lost';
+  return 'generic';
+}
+
 export function useAcceptBooking() {
   const qc = useQueryClient();
   return useMutation({

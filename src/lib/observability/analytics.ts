@@ -9,6 +9,7 @@ export type AnalyticsEvent =
   | 'plan_upgrade_completed'
   | 'driver_doc_uploaded'
   | 'ride_feed_viewed'
+  | 'ride_passed'
   | 'cap_warning_shown'
   | 'driver_location_streamed'
   | 'app_opened_from_deep_link';

@@ -10,7 +10,7 @@ let mockDriverDrift = 0;
 export const mockAcceptScenario: { mode: '200' | '402' | '409' } = { mode: '200' };
 export const mockCapState: { reached: boolean } = { reached: false };
 export const mockDocUploadFail: { fail: boolean } = { fail: false };
-export const mockFeedState: { empty: boolean } = { empty: false };
+export const mockFeedState: { empty: boolean; driverStatus?: string } = { empty: false };
 export const mockDeleteAccountScenario: { mode: '204' | '403' | '500' } = { mode: '204' };
 
 export const handlers = [
@@ -110,21 +110,26 @@ export const handlers = [
     );
   }),
 
-  http.get(`${BASE}/me/bookings`, () => {
-    return HttpResponse.json([
+  http.get(`${BASE}/me/bookings`, ({ request }) => {
+    const status = new URL(request.url).searchParams.get('status');
+    const all = [
       {
         id: 42, ref: 'MR-20260620-0042', status: 'completed',
         pickup: 'Port Louis', pickup_lat: -20.1609, pickup_lng: 57.5012,
         dropoff: 'Grand Baie', passengers: 2, accepted_by: 2, fare: '1500.00',
+        rider_name: 'Test Rider',
         created_at: '2026-06-20T09:00:00.000Z',
       },
       {
-        id: 43, ref: 'MR-20260621-0043', status: 'accepted',
+        id: 43, ref: 'MR-20260621-0043', status: 'cancelled',
         pickup: 'Flic en Flac', pickup_lat: -20.2747, pickup_lng: 57.3697,
         dropoff: 'Curepipe', passengers: 1, accepted_by: 2, fare: '900.00',
+        rider_name: 'Another Rider',
         created_at: '2026-06-21T14:00:00.000Z',
       },
-    ]);
+    ];
+    const rows = status ? all.filter((b) => b.status === status || status === 'completed' && b.status === 'cancelled') : all;
+    return HttpResponse.json(rows);
   }),
 
   http.get(`${BASE}/rides/:id/location`, () => {
@@ -175,8 +180,7 @@ export const handlers = [
   }),
 
   http.get(`${BASE}/rides/feed`, () => {
-    if (mockFeedState.empty) return HttpResponse.json([]);
-    return HttpResponse.json([
+    const openRides = mockFeedState.empty ? [] : [
       {
         id: 101,
         ref: 'MR-20260622-0101',
@@ -203,7 +207,18 @@ export const handlers = [
         distance_km: 4.7,
         created_at: '2026-06-22T08:15:00.000Z',
       },
-    ]);
+    ];
+    return HttpResponse.json({
+      open_rides: openRides,
+      current_ride: null,
+      plan: 'free',
+      used: mockCapState.reached ? 10 : 3,
+      limit: 10,
+      cap_reached: mockCapState.reached,
+      reset_at: '2026-07-01T00:00:00.000Z',
+      driver_name: 'Test Driver',
+      driver_status: mockFeedState.driverStatus ?? 'active',
+    });
   }),
 
   // Numeric booking lookup for the driver detail screen.
@@ -260,10 +275,52 @@ export const handlers = [
       plan: 'free',
       used: mockCapState.reached ? 10 : 3,
       limit: 10,
-      reached: mockCapState.reached,
+      cap_reached: mockCapState.reached,
       reset_at: '2026-07-01T00:00:00.000Z',
     }),
   ),
+
+  http.get(`${BASE}/packages`, () =>
+    HttpResponse.json([
+      {
+        slug: 'free',
+        name: 'Free',
+        price: 0,
+        limit: 5,
+        perks: ['Up to 5 bookings/month'],
+        featured: false,
+      },
+      {
+        slug: 'silver',
+        name: 'Silver',
+        price: 500,
+        limit: 30,
+        perks: ['Up to 30 bookings/month', 'Priority listing'],
+        featured: true,
+      },
+      {
+        slug: 'gold',
+        name: 'Gold',
+        price: 1200,
+        limit: null,
+        perks: ['Unlimited bookings', 'Priority listing', 'Dashboard analytics'],
+        featured: false,
+      },
+      {
+        slug: 'fleet',
+        name: 'Fleet',
+        price: 0,
+        limit: null,
+        perks: ['Custom fleet pricing', 'Dedicated account manager'],
+        featured: false,
+      },
+    ]),
+  ),
+
+  http.post(`${BASE}/bookings/:id/complete`, async ({ params }) => {
+    await delay(60);
+    return HttpResponse.json({ id: Number(params.id), status: 'completed' });
+  }),
 
   http.get(`${BASE}/me/upgrade-url`, ({ request }) => {
     const plan = new URL(request.url).searchParams.get('plan') ?? 'silver';

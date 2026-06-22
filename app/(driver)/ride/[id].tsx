@@ -1,17 +1,33 @@
 import { useState, useEffect, useRef } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator, Linking } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RideMap } from '@/lib/maps/RideMap';
-import { Button } from '@/components/ui/Button';
 import { useDriverBooking } from '@/features/driver/useDriverBooking';
 import { useAcceptBooking } from '@/features/driver/useAcceptBooking';
 import { useCancelBooking } from '@/features/driver/useCancelBooking';
+import { useCompleteBooking } from '@/features/driver/useCompleteBooking';
 import { startSharing, stopSharing } from '@/lib/location/rideShare';
 import { track } from '@/lib/observability/analytics';
 import { useTrackingStore } from '@/lib/stores/useTrackingStore';
+import { CurrentRideCard } from '@/components/driver/CurrentRideCard';
+import { Button } from '@/components/ui/Button';
 import type { ApiError } from '@/lib/api/client';
+
+// driver-side bookings include a `driver` field that the base Booking type doesn't model
+type BookingWithDriver = {
+  id: number;
+  ref: string;
+  status: string;
+  pickup: string;
+  pickup_lat: number;
+  pickup_lng: number;
+  dropoff: string;
+  passengers: number;
+  fare: string;
+  driver?: { name?: string; car?: string; plate?: string; phone?: string };
+};
 
 export default function RideDetail() {
   const { t } = useTranslation();
@@ -21,28 +37,24 @@ export default function RideDetail() {
   const booking = useDriverBooking(rideId);
   const accept = useAcceptBooking();
   const cancel = useCancelBooking();
+  const complete = useCompleteBooking();
 
   const [error, setError] = useState<string | null>(null);
   const [sharing, setSharing] = useState(false);
-  // keep a ref so the unmount cleanup always sees the latest value without
-  // re-registering the effect (which would cause a double-stop on manual cancel)
   const sharingRef = useRef(false);
 
   const lastDriverPosition = useTrackingStore((s) => s.lastDriverPosition);
 
-  // stop location task on unmount only
   useEffect(() => {
     return () => {
       if (sharingRef.current) void stopSharing();
     };
   }, []);
 
-  // keep ref in sync
   useEffect(() => {
     sharingRef.current = sharing;
   }, [sharing]);
 
-  // spec §7: stop sharing automatically when the ride ends
   useEffect(() => {
     const status = booking.data?.status;
     if (status === 'completed' || status === 'cancelled') {
@@ -60,20 +72,12 @@ export default function RideDetail() {
 
       const shareResult = await startSharing(rideId);
       if (shareResult.status === 'denied') {
-        try {
-          await cancel.mutateAsync({ bookingId: rideId });
-        } catch {
-          // best-effort; surface the location error regardless
-        }
+        try { await cancel.mutateAsync({ bookingId: rideId }); } catch { /* best-effort */ }
         setError(t('driver.location_denied'));
         return;
       }
       if (shareResult.status === 'error') {
-        try {
-          await cancel.mutateAsync({ bookingId: rideId });
-        } catch {
-          // best-effort
-        }
+        try { await cancel.mutateAsync({ bookingId: rideId }); } catch { /* best-effort */ }
         setError(t('driver.live_share_start_failed'));
         return;
       }
@@ -90,15 +94,32 @@ export default function RideDetail() {
     }
   }
 
-  async function onCancel() {
+  async function onRelease() {
     setError(null);
     try {
       await cancel.mutateAsync({ bookingId: rideId });
       await stopSharing();
       setSharing(false);
     } catch {
-      // non-critical; driver can retry
+      // non-critical
     }
+  }
+
+  async function onEndRide() {
+    setError(null);
+    try {
+      await complete.mutateAsync({ bookingId: rideId });
+      await stopSharing();
+      setSharing(false);
+    } catch {
+      // non-critical
+    }
+  }
+
+  function onNavigate() {
+    if (!booking.data) return;
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${booking.data.pickup_lat},${booking.data.pickup_lng}`;
+    void Linking.openURL(url);
   }
 
   if (booking.isLoading || !booking.data) {
@@ -109,7 +130,7 @@ export default function RideDetail() {
     );
   }
 
-  const b = booking.data;
+  const b = booking.data as unknown as BookingWithDriver;
 
   const markers: React.ComponentProps<typeof RideMap>['markers'] = [
     {
@@ -142,50 +163,50 @@ export default function RideDetail() {
       </View>
 
       <SafeAreaView edges={['bottom']} className="bg-basalt-950">
-        <View className="gap-3 px-6 py-4">
+        <View className="gap-3 px-0 pb-4 pt-2">
           {sharing ? (
-            <View testID="live-share-banner" className="rounded-md bg-lagoon-900 px-4 py-2">
+            <View testID="live-share-banner" className="mx-4 rounded-md bg-lagoon-900 px-4 py-2">
               <Text className="text-center text-sm text-lagoon-400">
                 {t('driver.live_share_active')}
               </Text>
             </View>
           ) : null}
 
-          <Text className="text-xl font-bold text-white">{b.ref}</Text>
-          <Text className="text-ink-300">{b.pickup} → {b.dropoff}</Text>
-          <View className="flex-row gap-4">
-            <Text className="text-sm text-ink-400">
-              {t('driver.fare_label')}: Rs {b.fare}
-            </Text>
-            <Text className="text-sm text-ink-400">
-              {t('driver.passengers_label')}: {b.passengers}
-            </Text>
-          </View>
-
           {error ? (
-            <Text testID="accept-error" className="text-danger">
+            <Text testID="accept-error" className="px-4 text-danger">
               {error}
             </Text>
           ) : null}
 
           {b.status === 'open' ? (
-            <Button
-              testID="accept-btn"
-              label={t('driver.accept_cta')}
-              loading={accept.isPending}
-              disabled={accept.isPending}
-              onPress={onAccept}
-            />
+            <View className="px-4">
+              <Button
+                testID="accept-btn"
+                label={t('driver.accept_cta')}
+                loading={accept.isPending}
+                disabled={accept.isPending}
+                onPress={onAccept}
+              />
+            </View>
           ) : null}
 
           {b.status === 'accepted' ? (
-            <Button
-              testID="cancel-btn"
-              variant="ghost"
-              label={t('driver.cancel_ride')}
-              loading={cancel.isPending}
-              disabled={cancel.isPending}
-              onPress={onCancel}
+            <CurrentRideCard
+              ride={{
+                id: b.id,
+                ref: b.ref,
+                pickup: b.pickup,
+                dropoff: b.dropoff,
+                fare: b.fare,
+                passengers: b.passengers,
+                rider_name: b.driver?.name,
+                rider_phone: b.driver?.phone,
+              }}
+              onNavigate={onNavigate}
+              onEndRide={onEndRide}
+              onRelease={onRelease}
+              endingRide={complete.isPending}
+              releasing={cancel.isPending}
             />
           ) : null}
         </View>

@@ -31,7 +31,7 @@ export default function PlanScreen() {
     if (result === 'error') setUpgradeMsg(t('driver.upgrade_failed'));
   }
 
-  const pct = data != null && data.limit > 0 ? Math.round((data.used / data.limit) * 100) : 0;
+  const pct = data != null && data.limit != null && data.limit > 0 ? Math.round((data.used / data.limit) * 100) : 0;
 
   useEffect(() => {
     if (data !== undefined && pct >= 80) {
@@ -62,7 +62,7 @@ export default function PlanScreen() {
     <Screen scroll testID="plan-screen">
       <Text className="mb-6 text-3xl font-bold text-lagoon-400">{t('driver.plan_title')}</Text>
 
-      {data.reached ? (
+      {data.cap_reached ? (
         <View testID="cap-reached-banner" className="mb-4 rounded-md border-l-4 border-l-coral-600 bg-coral-600/20 px-4 py-3">
           <Text className="font-semibold text-sunset-400">{t('driver.cap_reached')}</Text>
         </View>
@@ -72,7 +72,7 @@ export default function PlanScreen() {
         <Text className="mb-1 text-sm text-ink-400">{t('driver.plan_used')}</Text>
         <Text testID="cap-used" className="mb-3 text-4xl font-bold text-white">
           {data.used}{' '}
-          <Text className="text-2xl text-ink-400">/ {data.limit}</Text>
+          {data.limit != null && <Text className="text-2xl text-ink-400">/ {data.limit}</Text>}
         </Text>
         <View className="h-2 overflow-hidden rounded-full bg-basalt-700">
           <View

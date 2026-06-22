@@ -9,11 +9,13 @@ function wrap({ children }: { children: ReactNode }) {
 }
 
 describe('useFeed', () => {
-  it('fetches open rides and returns a non-empty array', async () => {
+  it('fetches feed response with open_rides array', async () => {
     const { result } = renderHook(() => useFeed(), { wrapper: wrap });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(Array.isArray(result.current.data)).toBe(true);
-    expect(result.current.data?.length).toBeGreaterThan(0);
-    expect(result.current.data?.[0]?.status).toBe('open');
+    expect(Array.isArray(result.current.data?.open_rides)).toBe(true);
+    expect(result.current.data?.open_rides.length).toBeGreaterThan(0);
+    expect(result.current.data?.open_rides[0]?.status).toBe('open');
+    expect(result.current.data?.cap_reached).toBeDefined();
+    expect(result.current.data?.plan).toBeDefined();
   });
 });

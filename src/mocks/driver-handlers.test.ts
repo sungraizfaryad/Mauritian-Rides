@@ -9,12 +9,13 @@ describe('driver MSW handlers', () => {
     mockDocUploadFail.fail = false;
   });
 
-  it('GET /rides/feed returns an array of open rides', async () => {
+  it('GET /rides/feed returns feed response with open_rides array', async () => {
     const res = await fetch(`${BASE}/rides/feed`);
     expect(res.ok).toBe(true);
-    const body = (await res.json()) as { id: number; status: string }[];
-    expect(Array.isArray(body)).toBe(true);
-    expect(body[0]?.status).toBe('open');
+    const body = (await res.json()) as { open_rides: { id: number; status: string }[]; cap_reached: boolean };
+    expect(Array.isArray(body.open_rides)).toBe(true);
+    expect(body.open_rides[0]?.status).toBe('open');
+    expect(typeof body.cap_reached).toBe('boolean');
   });
 
   it('GET /bookings/by-id/:id returns a booking shape', async () => {
@@ -62,19 +63,19 @@ describe('driver MSW handlers', () => {
     expect(res.status).toBe(204);
   });
 
-  it('GET /me/cap returns plan info with reached:false by default', async () => {
+  it('GET /me/cap returns plan info with cap_reached:false by default', async () => {
     const res = await fetch(`${BASE}/me/cap`);
-    const body = (await res.json()) as { plan: string; used: number; limit: number; reached: boolean };
+    const body = (await res.json()) as { plan: string; used: number; limit: number; cap_reached: boolean };
     expect(body.plan).toBe('free');
     expect(typeof body.used).toBe('number');
-    expect(body.reached).toBe(false);
+    expect(body.cap_reached).toBe(false);
   });
 
-  it('GET /me/cap returns reached:true when mockCapState.reached is set', async () => {
+  it('GET /me/cap returns cap_reached:true when mockCapState.reached is set', async () => {
     mockCapState.reached = true;
     const res = await fetch(`${BASE}/me/cap`);
-    const body = (await res.json()) as { reached: boolean };
-    expect(body.reached).toBe(true);
+    const body = (await res.json()) as { cap_reached: boolean };
+    expect(body.cap_reached).toBe(true);
   });
 
   it('GET /me/upgrade-url returns a url containing the plan', async () => {
