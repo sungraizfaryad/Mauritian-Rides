@@ -40,6 +40,9 @@ describe('rider i18n', () => {
       'account.delete_confirm_yes',
       'account.deleting',
       'account.delete_failed',
+      'account.password_label',
+      'account.password_required',
+      'account.wrong_password',
     ];
     expect(flat(en)).toEqual(expect.arrayContaining(required));
     expect(flat(fr)).toEqual(expect.arrayContaining(required));

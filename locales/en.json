@@ -113,7 +113,10 @@
     "delete_confirm_body": "This will permanently delete your account and cancel any active bookings. This cannot be undone.",
     "delete_confirm_yes": "Yes, delete",
     "deleting": "Deleting…",
-    "delete_failed": "Could not delete your account. Try again."
+    "delete_failed": "Could not delete your account. Try again.",
+    "password_label": "Current password",
+    "password_required": "Enter your current password.",
+    "wrong_password": "Current password is incorrect."
   },
   "consent": {
     "title": "Help us improve Mauritian Rides",
