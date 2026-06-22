@@ -5,7 +5,7 @@ import { PublicFooterNav } from '@/components/public/PublicFooterNav';
 export default function PublicLayout() {
   return (
     <View style={{ flex: 1 }}>
-      <Stack screenOptions={{ headerShown: false }} style={{ flex: 1 }} />
+      <Stack screenOptions={{ headerShown: false }} />
       <PublicFooterNav />
     </View>
   );
