@@ -82,4 +82,18 @@ describe('rider i18n', () => {
     expect(flat(en)).toEqual(expect.arrayContaining(required));
     expect(flat(fr)).toEqual(expect.arrayContaining(required));
   });
+
+  it('includes the driver_signup namespace in both EN and FR', () => {
+    const required = [
+      'driver_signup.title',
+      'driver_signup.step1_label',
+      'driver_signup.step4_label',
+      'driver_signup.consent_verify',
+      'driver_signup.consent_commission',
+      'driver_signup.cta_submit',
+      'driver_signup.error_nid',
+    ];
+    expect(flat(en)).toEqual(expect.arrayContaining(required));
+    expect(flat(fr)).toEqual(expect.arrayContaining(required));
+  });
 });

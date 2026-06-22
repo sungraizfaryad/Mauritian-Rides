@@ -21,6 +21,8 @@ const config: ExpoConfig & { newArchEnabled?: boolean } = {
       NSLocationAlwaysAndWhenInUseUsageDescription:
         'Share your live location with the rider during an active ride.',
       UIBackgroundModes: ['location', 'fetch', 'remote-notification'],
+      // Allows http to .local hostnames (Local by Flywheel dev backend). No effect on production traffic.
+      NSAppTransportSecurity: { NSAllowsLocalNetworking: true },
     },
   },
   android: {

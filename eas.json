@@ -9,7 +9,7 @@
       "distribution": "internal",
       "channel": "development",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://mauritianrides.local/wp-json/mr/v1"
+        "EXPO_PUBLIC_API_URL": "http://mauritianrides.local/wp-json/mr/v1"
       },
       "ios": { "simulator": true }
     },

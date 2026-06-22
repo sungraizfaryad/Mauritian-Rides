@@ -147,16 +147,16 @@ export const handlers = [
 
   http.post(`${BASE}/me/device-token`, () => new HttpResponse(null, { status: 204 })),
 
-  http.post(`${BASE}/drivers/register`, async ({ request }) => {
-    const body = (await request.json()) as { email?: string; persona?: string };
+  http.post(`${BASE}/drivers/register`, async () => {
     return HttpResponse.json({
       access_token: 'mock.jwt.access',
       refresh_token: 'mock.refresh',
       expires_in: 900,
-      persona: body.persona === 'driver' ? 'driver' : 'rider',
+      persona: 'driver',
       user_id: 3,
-      display_name: 'New User',
+      display_name: 'New Driver',
       locale: 'en',
+      plan: 'free',
     });
   }),
 

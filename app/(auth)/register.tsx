@@ -32,9 +32,13 @@ export default function Register() {
 
   async function onSubmit(values: RegisterInput) {
     setServerError(null);
+    if (values.persona === 'driver') {
+      router.push('/(auth)/driver-signup' as never);
+      return;
+    }
     try {
       const session = await reg.mutateAsync(values);
-      router.replace(session.persona === 'driver' ? '/(driver)/feed' : (safeNextRoute(next) as never));
+      router.replace(safeNextRoute(next) as never);
     } catch (e) {
       setServerError((e as ApiError).message);
     }

@@ -4,8 +4,9 @@ import { useAuthStore } from '@/lib/auth/store';
 import Register from './register';
 
 const mockReplace = jest.fn();
+const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
-  router: { replace: (...a: unknown[]) => mockReplace(...a) },
+  router: { replace: (...a: unknown[]) => mockReplace(...a), push: (...a: unknown[]) => mockPush(...a) },
   Link: ({ children }: { children: React.ReactNode }) => children,
   useLocalSearchParams: () => ({}),
 }));
@@ -23,6 +24,7 @@ beforeAll(async () => {
 });
 beforeEach(() => {
   mockReplace.mockClear();
+  mockPush.mockClear();
   useAuthStore.getState().clearSession();
 });
 
@@ -33,13 +35,13 @@ describe('Register screen', () => {
     expect(screen.getByTestId('role-driver')).toBeTruthy();
   });
 
-  it('registers a driver and routes to the driver shell', async () => {
+  it('selecting driver role routes to the driver signup flow', async () => {
     render(<Register />);
     fireEvent.press(screen.getByTestId('role-driver'));
     fireEvent.changeText(screen.getByTestId('register-name'), 'New Driver');
     fireEvent.changeText(screen.getByTestId('register-email'), 'driver@x.com');
     fireEvent.changeText(screen.getByTestId('register-password'), 'secret12');
     fireEvent.press(screen.getByTestId('register-submit'));
-    await waitFor(() => expect(mockReplace).toHaveBeenCalledWith('/(driver)/feed'));
+    await waitFor(() => expect(mockPush).toHaveBeenCalledWith('/(auth)/driver-signup'));
   });
 });
