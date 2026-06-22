@@ -339,7 +339,21 @@
     "delete_failed": "Could not delete your account. Try again.",
     "password_label": "Current password",
     "password_required": "Enter your current password.",
-    "wrong_password": "Current password is incorrect."
+    "wrong_password": "Current password is incorrect.",
+    "logout_cta": "Sign out",
+    "logout_confirm": "You will be signed out of your account.",
+    "language_label": "Language",
+    "language_en": "English",
+    "language_fr": "Français",
+    "profile_link": "Profile",
+    "docs_link": "Documents",
+    "messages_link": "Messages",
+    "availability_link": "Availability",
+    "help_link": "Help & Support",
+    "legal_heading": "Legal",
+    "analytics_label": "Share analytics",
+    "analytics_on": "On",
+    "analytics_off": "Off"
   },
   "consent": {
     "title": "Help us improve Mauritian Rides",
